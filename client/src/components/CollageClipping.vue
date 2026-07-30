@@ -20,7 +20,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { gsap, ScrollTrigger } from 'boot/gsap'
 
-// Houston collage-clipping motif — brand-identity.md "Houston iconography" section.
+// Houston collage-clipping motif — docs/brand-identity.md "Houston iconography" section.
 // Torn-edge photo, slight rotation, physical-media accent (tape/pin).
 // Renders nothing when no src is supplied — ready to receive real event
 // photography without further dev work.

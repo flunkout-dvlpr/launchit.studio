@@ -14,6 +14,10 @@ Claude. See [CLAUDE.md](./CLAUDE.md) for the full project spec.
   cycle. See [`sessions-archive/README.md`](./sessions-archive/README.md).
   Any `CLAUDE.md` offered as a download from the site is generated from
   here, never hand-edited in `client/public/downloads/` directly.
+- **`docs/`** — planning docs from the site's own build: brand identity
+  (palette, type, Houston iconography) and the Framework page's animation
+  spec/handoff notes. Reference material, not something the site reads
+  from at runtime.
 
 ## Running locally
 

@@ -1,4 +1,4 @@
-// Self-hosted brand type — see /brand-identity.md at repo root.
+// Self-hosted brand type — see /docs/brand-identity.md at repo root.
 // Space Grotesk: structural/technical (nav, labels, framework copy).
 // Fraunces: personality/voice (headlines, pull quotes), incl. italic.
 //
