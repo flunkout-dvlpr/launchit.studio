@@ -21,18 +21,16 @@ Every small business with a public email address deals with the same handful of 
 There's one piece of setup that genuinely can't happen live in the room: getting Gmail API access approved for your own account. It's not hard, but it's Google's console, not code, and walking a room through it live would burn most of the session watching one screen. Do this ahead of time, it takes about 10 minutes:
 
 1. Go to [console.cloud.google.com](https://console.cloud.google.com/) and create a new project.
-2. Open "APIs & Services" → "Library" and enable the **Gmail API**.
-3. Open "APIs & Services" → "OAuth consent screen." Google now walks you through this as a setup wizard, click **Get started** and fill in:
+2. Open "APIs & Services" → "Library" and enable the **Gmail API** ([official steps](https://developers.google.com/workspace/gmail/api/quickstart/nodejs#enable_the_api)).
+3. Open "APIs & Services" → "OAuth consent screen" ([official steps](https://developers.google.com/workspace/gmail/api/quickstart/nodejs#configure_the_oauth_consent_screen)). Google now walks you through this as a setup wizard, click **Get started** and fill in:
    - **App name** — anything, e.g. "Email Drafter"
    - **User support email** — your own email
    - **Audience** — choose **External**. If you're on a personal Gmail account rather than Google Workspace, this is the only option offered, and that's fine, it doesn't make the app public or trigger any review process, it just controls who's *eligible* to sign in at all.
    - **Contact information** — your email again
    - Click through to **Finish**
 4. Still under OAuth consent screen settings, find the **Audience** tab and add your own Gmail address under **Test users**. This is the part that actually matters: as long as the app stays in **Testing** status (the default, nothing to change), only people explicitly added here can complete sign-in, everyone else is blocked regardless of the Audience setting above.
-5. Open "APIs & Services" → "Credentials," create an **OAuth client ID** (application type: Desktop app), and download it. You'll be asked for a **name** here too, it's just a label so you can tell clients apart in the console later, reusing the app name from step 3 is fine, it has no effect on how anything works.
+5. Open "APIs & Services" → "Credentials," create an **OAuth client ID** (application type: Desktop app) ([official steps](https://developers.google.com/workspace/gmail/api/quickstart/nodejs#authorize_credentials_for_a_desktop_application)), and download it. You'll be asked for a **name** here too, it's just a label so you can tell clients apart in the console later, reusing the app name from step 3 is fine, it has no effect on how anything works.
 6. Rename the downloaded file to `credentials.json` and keep it somewhere you can find it on the day.
-
-Official reference, straight from the source: [Gmail API Node.js quickstart](https://developers.google.com/gmail/api/quickstart/nodejs).
 
 If any of these screens are unfamiliar, that's fine, describe what's on screen to Claude Code and it can walk you through exactly what to click next.
 
@@ -72,11 +70,13 @@ here. This takes about 10 minutes:
 
 1. Go to https://console.cloud.google.com/ and create a new project.
 2. Open "APIs & Services" > "Library" and enable the **Gmail API**.
+   (official steps: https://developers.google.com/workspace/gmail/api/quickstart/nodejs#enable_the_api)
 3. Open "APIs & Services" > "OAuth consent screen". Click **Get started**
    and fill in the wizard: app name (anything), user support email (yours),
    audience (**External**, the only option on a personal Gmail account,
    this is fine and doesn't publish or verify the app), and contact
    information (your email again). Click through to **Finish**.
+   (official steps: https://developers.google.com/workspace/gmail/api/quickstart/nodejs#configure_the_oauth_consent_screen)
 4. On the **Audience** tab of those same settings, add your own Gmail
    address under **Test users**. This is what actually gates access, as
    long as the app stays in **Testing** status (the default), only people
@@ -86,12 +86,11 @@ here. This takes about 10 minutes:
    it's just a label for telling clients apart in the console later, any
    name works, it has no effect on functionality. Download it, you'll get
    a JSON file.
+   (official steps: https://developers.google.com/workspace/gmail/api/quickstart/nodejs#authorize_credentials_for_a_desktop_application)
 6. Rename that downloaded file to `credentials.json` and place it in this
    project's root folder. `credentials.json.example` in this folder shows
    the expected shape, it's already gitignored, so this is safe to drop in
    directly.
-
-Official walkthrough, if you want the source: https://developers.google.com/gmail/api/quickstart/nodejs
 
 If any of these screens look unfamiliar, ask Claude Code to walk you through
 what you're looking at, describe what's on screen and it can tell you
