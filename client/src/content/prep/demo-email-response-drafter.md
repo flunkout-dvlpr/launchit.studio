@@ -29,7 +29,7 @@ There's one piece of setup that genuinely can't happen live in the room: getting
    - **Contact information** — your email again
    - Click through to **Finish**
 4. Still under OAuth consent screen settings, find the **Audience** tab and add your own Gmail address under **Test users**. This is the part that actually matters: as long as the app stays in **Testing** status (the default, nothing to change), only people explicitly added here can complete sign-in, everyone else is blocked regardless of the Audience setting above.
-5. Open "APIs & Services" → "Credentials," create an **OAuth client ID** (application type: Desktop app), and download it.
+5. Open "APIs & Services" → "Credentials," create an **OAuth client ID** (application type: Desktop app), and download it. You'll be asked for a **name** here too, it's just a label so you can tell clients apart in the console later, reusing the app name from step 3 is fine, it has no effect on how anything works.
 6. Rename the downloaded file to `credentials.json` and keep it somewhere you can find it on the day.
 
 Official reference, straight from the source: [Gmail API Node.js quickstart](https://developers.google.com/gmail/api/quickstart/nodejs).
@@ -82,7 +82,10 @@ here. This takes about 10 minutes:
    long as the app stays in **Testing** status (the default), only people
    added here can sign in.
 5. Open "APIs & Services" > "Credentials" and create an **OAuth client ID**
-   (application type: **Desktop app**). Download it, you'll get a JSON file.
+   (application type: **Desktop app**). You'll be asked for a name here too,
+   it's just a label for telling clients apart in the console later, any
+   name works, it has no effect on functionality. Download it, you'll get
+   a JSON file.
 6. Rename that downloaded file to `credentials.json` and place it in this
    project's root folder. `credentials.json.example` in this folder shows
    the expected shape, it's already gitignored, so this is safe to drop in

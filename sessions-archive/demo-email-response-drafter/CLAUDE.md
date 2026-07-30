@@ -35,7 +35,10 @@ here. This takes about 10 minutes:
    long as the app stays in **Testing** status (the default), only people
    added here can sign in.
 5. Open "APIs & Services" > "Credentials" and create an **OAuth client ID**
-   (application type: **Desktop app**). Download it, you'll get a JSON file.
+   (application type: **Desktop app**). You'll be asked for a name here too,
+   it's just a label for telling clients apart in the console later, any
+   name works, it has no effect on functionality. Download it, you'll get
+   a JSON file.
 6. Rename that downloaded file to `credentials.json` and place it in this
    project's root folder. `credentials.json.example` in this folder shows
    the expected shape, it's already gitignored, so this is safe to drop in
