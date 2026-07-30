@@ -150,3 +150,37 @@ never sends on its own.
 - `output/drafts.md` contains one on-voice draft per real matched email,
   or a clearly marked "no reply needed" for automated ones
 - Nothing was sent, and no credentials were committed to version control
+
+## Running it again (after the first build)
+Everything above only happens once: the Google Cloud setup, and running
+`scripts/auth.js`. Using this day to day afterward is just:
+
+1. Open this folder in Claude Code.
+2. Ask it to run `scripts/fetch-emails.js` and then draft replies from
+   whatever lands in `data/matches.json`, the same thing that happened
+   during the first build, just without needing to write any new code.
+3. Open `output/drafts.md`, read the drafts, copy whatever's good into a
+   real reply. Nothing here sends anything on its own, ever.
+
+### The knobs you can turn, no code required
+- **`keywords.md`** — this is the actual list of what counts as "worth a
+  reply." Add a line to catch something new, delete a line to stop
+  catching something, edit a line to be more specific. If you're getting
+  irrelevant matches, prefer specific phrases ("when will my order ship")
+  over single common words ("order").
+- **`voice.md`** — this is what teaches drafts your tone. If a draft feels
+  off, swap in different or additional real examples of replies you've
+  actually sent, rather than trying to describe your tone in the abstract,
+  showing works better than telling.
+- **How many emails get checked** — `node scripts/fetch-emails.js` looks at
+  your last 25 emails by default. To check more or fewer, pass a number:
+  `node scripts/fetch-emails.js 100`.
+
+### If something breaks
+- Gmail access stops working: delete `token.json` and run
+  `node scripts/auth.js` again, it'll walk you through browser approval
+  one more time.
+- You want to fully revoke access (lost laptop, etc.): go to
+  https://myaccount.google.com/permissions and remove the app there. This
+  works regardless of whether `credentials.json`/`token.json` still exist
+  on any device.
