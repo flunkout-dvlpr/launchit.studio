@@ -3,6 +3,21 @@ import MarkdownIt from 'markdown-it'
 
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true })
 
+// Open external links in a new tab; internal links (downloads, other site
+// pages) stay in the same tab.
+const defaultLinkOpen = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+  return self.renderToken(tokens, idx, options)
+}
+md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+  const token = tokens[idx]
+  const href = token.attrGet('href') || ''
+  if (/^https?:\/\//i.test(href)) {
+    token.attrSet('target', '_blank')
+    token.attrSet('rel', 'noopener noreferrer')
+  }
+  return defaultLinkOpen(tokens, idx, options, env, self)
+}
+
 const FRONTMATTER_RE = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/
 
 const rawFiles = import.meta.glob('/src/content/prep/*.md', { as: 'raw', eager: true })
