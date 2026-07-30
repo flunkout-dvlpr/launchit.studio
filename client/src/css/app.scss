@@ -1,1 +1,87 @@
-// app global css in SCSS form
+// Launchit Sessions — global brand styles
+// Palette/type rationale: /brand-identity.md at repo root.
+
+:root {
+  --paper: #F4F0E6;
+  --navy: #1E2B3C;
+  --gridline: #3E7CA6;
+  --coral: #D85A30;
+  --gold: #EF9F27;
+  --teal: #1D9E75;
+
+  --font-label: 'Space Grotesk', sans-serif;
+  --font-display: 'Fraunces', serif;
+}
+
+html, body {
+  background: var(--paper);
+  color: var(--navy);
+}
+
+body {
+  font-family: var(--font-label);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-label {
+  font-family: var(--font-label);
+}
+
+// Low-opacity graph-paper texture for structural pages (About, Framework).
+// Applied as a class on a section/page wrapper, not globally.
+.grid-texture {
+  background-image:
+    linear-gradient(rgba(62, 124, 166, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 124, 166, 0.14) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+// Rotated pill/badge — the primary "maximalist" graphic move. Short label
+// text only (tags, cycle numbers, status) — never body copy.
+.pill-tag {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  transform: rotate(-2deg);
+  white-space: nowrap;
+
+  &--coral { background: var(--coral); color: var(--paper); }
+  &--gold { background: var(--gold); color: var(--navy); }
+  &--teal { background: var(--teal); color: var(--paper); }
+  &--outline {
+    background: transparent;
+    border: 1.5px solid var(--navy);
+    color: var(--navy);
+  }
+
+  &.tilt-right { transform: rotate(3deg); }
+  &.tilt-left { transform: rotate(-3deg); }
+}
+
+// Blueprint-style dimension/annotation divider — decorative section break.
+.dimension-line {
+  position: relative;
+  height: 1px;
+  background: var(--gridline);
+  opacity: 0.5;
+  margin: 2.5rem 0;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    width: 1px;
+    height: 9px;
+    background: var(--gridline);
+  }
+  &::before { left: 0; }
+  &::after { right: 0; }
+}
