@@ -26,6 +26,36 @@ subfolder should contain at minimum:
   project lives, the date this copy was archived, and what each file in the
   folder is for.
 
+## Building a demo live in its archive folder
+
+For demos (not real submitted cycles, see below), it's fine, encouraged
+even, to build the actual project directly inside its
+`sessions-archive/demo-<slug>/` folder rather than building it elsewhere
+and copying the `CLAUDE.md` over afterward. That way the archived brief is
+never a reconstruction, it's the literal file the project was built from,
+and there's nothing to keep in sync by hand beyond running the download
+sync script.
+
+If you do this, **before writing any code**, the folder needs:
+
+- Its own `.gitignore`, scoped to whatever that specific project actually
+  generates or needs kept secret (`node_modules/`, `.env`, credential
+  files, output/data directories, whatever applies). Don't rely on the
+  repo-root `.gitignore` alone, it only catches a couple of common
+  filenames (`credentials.json`, `token.json`, `.env`) as a last-resort
+  safety net, not a substitute for a real per-project ignore list.
+- An `.example` counterpart for anything credential-shaped that a person
+  would need to see the shape of to get started (e.g. `credentials.json` →
+  `credentials.json.example` with placeholder values), checked into git so
+  the real file's structure is documented even though the real values
+  never are.
+
+Real submitted cycles are different: they involve a third party's actual
+business data, and the project's own spec (`CLAUDE.md` at the repo root)
+already flags a public source-code archive as out of scope until a
+data-sanitization pattern is worked out with submitters. So cycles stay
+brief-only in here for now, this live-build pattern is for demos only.
+
 ## Relationship to the site
 
 - Prep artifact write-ups live in `client/src/content/prep/*.md` and are
@@ -49,4 +79,6 @@ subfolder should contain at minimum:
   phase-one-only brief kept alongside it for history.
 - `demo-email-response-drafter/` — the kickoff brief for the email response
   drafter demo (`client/src/content/prep/demo-email-response-drafter.md`),
-  written to be replicated by attendees themselves.
+  written to be replicated by attendees themselves. Has its own
+  `.gitignore` and `credentials.json.example` already in place, ready to
+  build the actual project in this folder directly.

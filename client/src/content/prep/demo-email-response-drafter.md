@@ -12,8 +12,6 @@ readTime: "~8 minutes"
 
 A small local tool that connects to your own Gmail inbox, pulls your most recent emails, filters for the ones matching keywords you care about (things like "refund," "cancel," "when will my order," whatever shows up in your inbox again and again), and drafts a reply for each one in your own voice. Nothing sends automatically. Every draft is something you read and approve yourself.
 
-This demo exists to answer a different question than the Meditations series does. That series shows what's possible in real depth. This one is built specifically to be replicated: something you could realistically finish in a single 60-90 minute sitting, starting from an empty folder.
-
 ## Business case
 
 Every small business with a public email address deals with the same handful of questions on repeat: where's my order, can I get a refund, do you have this in stock, what are your hours. Answering each one individually eats real time, and it's exactly the kind of task that's simple in substance but expensive in volume, which is precisely what Claude is good at helping with once it's actually connected to an inbox someone uses every day.

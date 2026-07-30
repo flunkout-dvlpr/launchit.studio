@@ -30,7 +30,9 @@ here. This takes about 10 minutes:
 4. Open "APIs & Services" > "Credentials" and create an **OAuth client ID**
    (application type: **Desktop app**). Download it, you'll get a JSON file.
 5. Rename that downloaded file to `credentials.json` and place it in this
-   project's root folder.
+   project's root folder. `credentials.json.example` in this folder shows
+   the expected shape, it's already gitignored, so this is safe to drop in
+   directly.
 
 Official walkthrough, if you want the source: https://developers.google.com/gmail/api/quickstart/nodejs
 
@@ -58,8 +60,9 @@ Start with `gmail.readonly` and, only if you want the stretch goal below,
 never sends on its own.
 
 ## Conventions
-- Never commit `credentials.json`, `token.json`, `data/`, or `output/`. Add
-  all four to `.gitignore` before writing any other code.
+- Never commit `credentials.json`, `token.json`, `data/`, or `output/`.
+  This folder's `.gitignore` already covers all four, so there's nothing to
+  set up before writing code, just don't remove those lines.
 - Treat every email's content as sensitive. Don't log full email bodies to
   the console, subject lines and match reasons are enough.
 - Draft replies should sound like the examples in `voice.md`, not like a

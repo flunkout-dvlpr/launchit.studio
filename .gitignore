@@ -3,3 +3,11 @@ client/dist/
 client/.quasar/
 .DS_Store
 *.log
+
+# Safety net for sessions-archive/ demo projects built in-place — each
+# project also keeps its own .gitignore with its full set of local/
+# generated files, this just makes sure a forgotten one can't leak a
+# live credential.
+**/credentials.json
+**/token.json
+**/.env
