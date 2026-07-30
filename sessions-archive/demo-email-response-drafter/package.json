@@ -1,0 +1,15 @@
+{
+  "name": "email-response-drafter",
+  "version": "0.0.1",
+  "description": "Filters recent Gmail messages by keyword and drafts on-voice replies for review.",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "auth": "node scripts/auth.js",
+    "fetch": "node scripts/fetch-emails.js"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "@google-cloud/local-auth": "^3.0.1"
+  }
+}
