@@ -6,3 +6,4 @@ where is my order
 tracking
 reschedule
 refer a friend
+invoice

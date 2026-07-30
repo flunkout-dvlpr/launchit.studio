@@ -6,11 +6,12 @@ const fs = require('fs').promises
 const path = require('path')
 const { google } = require('googleapis')
 
-const N = Number(process.argv[2]) || 25
-
 const TOKEN_PATH = path.join(__dirname, '..', 'token.json')
 const KEYWORDS_PATH = path.join(__dirname, '..', 'keywords.md')
+const SETTINGS_PATH = path.join(__dirname, '..', 'settings.md')
 const OUTPUT_PATH = path.join(__dirname, '..', 'data', 'matches.json')
+
+const SETTINGS_DEFAULTS = { emails_to_check: 25, skip_bulk_mail: true }
 
 async function loadClient () {
   const content = await fs.readFile(TOKEN_PATH)
@@ -24,6 +25,32 @@ async function loadKeywords () {
     .split('\n')
     .map(line => line.replace(/^[-*]\s*/, '').trim().toLowerCase())
     .filter(Boolean)
+}
+
+// settings.md holds simple "key: value" lines (a "- " bullet is optional).
+// Missing file or unrecognized lines just fall back to SETTINGS_DEFAULTS,
+// this is meant to be hand-edited by someone with no coding background, so
+// it shouldn't be able to crash the script.
+async function loadSettings () {
+  const settings = { ...SETTINGS_DEFAULTS }
+  let raw
+  try {
+    raw = await fs.readFile(SETTINGS_PATH, 'utf8')
+  } catch (err) {
+    return settings
+  }
+  for (const line of raw.split('\n')) {
+    const match = line.match(/^[-*]?\s*(\w+)\s*:\s*(.+?)\s*$/)
+    if (!match) continue
+    const [, key, rawValue] = match
+    if (!(key in SETTINGS_DEFAULTS)) continue
+    if (rawValue === 'true' || rawValue === 'false') {
+      settings[key] = rawValue === 'true'
+    } else if (!Number.isNaN(Number(rawValue))) {
+      settings[key] = Number(rawValue)
+    }
+  }
+  return settings
 }
 
 function getHeader (headers, name) {
@@ -100,17 +127,23 @@ function matchesKeywords (subject, body, keywords) {
 // this header on bulk mail; real one-to-one customer emails never have it.
 // Without this, a generic keyword like "tracking" matches an unrelated
 // marketing email about a product feature just as easily as a real
-// customer asking where their order is.
+// customer asking where their order is. Controlled by settings.md's
+// skip_bulk_mail, on by default.
 function isBulkMail (headers) {
   return Boolean(getHeader(headers, 'List-Unsubscribe'))
 }
 
 async function main () {
+  const settings = await loadSettings()
+  // A number typed after the command (e.g. `node scripts/fetch-emails.js 100`)
+  // overrides settings.md for that one run only, without changing the file.
+  const N = Number(process.argv[2]) || settings.emails_to_check
+
   const auth = await loadClient()
   const gmail = google.gmail({ version: 'v1', auth })
   const keywords = await loadKeywords()
 
-  console.log(`Fetching last ${N} messages...`)
+  console.log(`Fetching last ${N} messages (bulk-mail filter: ${settings.skip_bulk_mail ? 'on' : 'off'})...`)
   const list = await gmail.users.messages.list({ userId: 'me', maxResults: N })
   const ids = (list.data.messages || []).map(m => m.id)
 
@@ -123,7 +156,7 @@ async function main () {
     const from = getHeader(headers, 'From')
     const date = getHeader(headers, 'Date')
 
-    if (isBulkMail(headers)) {
+    if (settings.skip_bulk_mail && isBulkMail(headers)) {
       skippedBulk++
       continue
     }

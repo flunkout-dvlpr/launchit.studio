@@ -69,11 +69,18 @@ exactly what to click next.
   under Conventions.
 - `voice.md` — 3 to 5 examples of replies you've actually written before, so
   drafts sound like you instead of a generic bot
+- `settings.md` — plain `key: value` lines controlling behavior without
+  touching code: `emails_to_check` (how many recent emails to scan, default
+  25) and `skip_bulk_mail` (on by default, see Conventions). Missing file or
+  bad lines just fall back to defaults, this is meant to be hand-edited by
+  someone with no coding background, it shouldn't be able to crash anything.
 - `scripts/auth.js` — a one-time script that opens your browser, asks you to
   approve access, and saves `token.json`
-- `scripts/fetch-emails.js` — pulls your last N emails (N configurable,
-  default 25), skips bulk/newsletter mail, extracts clean plain-text bodies,
-  and saves the ones matching `keywords.md` to `data/matches.json`
+- `scripts/fetch-emails.js` — pulls recent emails per `settings.md` (a
+  number passed on the command line overrides it for one run only, e.g.
+  `node scripts/fetch-emails.js 100`), skips bulk/newsletter mail unless
+  turned off, extracts clean plain-text bodies, and saves the ones matching
+  `keywords.md` to `data/matches.json`
 - `output/drafts.md` — one draft reply per matched email, written here for
   you to review. Nothing is sent, and nothing touches Gmail automatically.
 
@@ -94,12 +101,14 @@ never sends on its own.
   rather than improvising a new tone each time.
 - Keyword matching should be case-insensitive and check both the subject
   line and the email body.
-- **Skip bulk/newsletter mail before keyword matching, not after.** Filter
-  out anything with a `List-Unsubscribe` header (required by law on bulk
-  mail, never present on a real one-to-one email). Without this, a single
-  common keyword like "tracking" will match marketing newsletters about
-  unrelated features just as easily as a real customer question, confirmed
-  against a real inbox during testing.
+- **Skip bulk/newsletter mail before keyword matching, not after**, when
+  `settings.md`'s `skip_bulk_mail` is on (the default). Filter out anything
+  with a `List-Unsubscribe` header (required by law on bulk mail, never
+  present on a real one-to-one email). Without this, a single common
+  keyword like "tracking" will match marketing newsletters about unrelated
+  features just as easily as a real customer question, confirmed against a
+  real inbox during testing. Make this an actual on/off setting, not a
+  hardcoded assumption, some people may want to see every match unfiltered.
 - **Extract email bodies as real plain text, not raw HTML.** Gmail messages
   come in inconsistent shapes: some have `body.data` directly on the
   payload, some nest it under `.parts`, and both cases can be either plain
@@ -172,9 +181,14 @@ Everything above only happens once: the Google Cloud setup, and running
   off, swap in different or additional real examples of replies you've
   actually sent, rather than trying to describe your tone in the abstract,
   showing works better than telling.
-- **How many emails get checked** — `node scripts/fetch-emails.js` looks at
-  your last 25 emails by default. To check more or fewer, pass a number:
-  `node scripts/fetch-emails.js 100`.
+- **`settings.md`** — two more dials, both plain `key: value` lines:
+  - `emails_to_check` — how many recent emails to scan each run (default
+    25). Change the number and save, no need to remember a command-line
+    flag every time (though `node scripts/fetch-emails.js 100` still works
+    too, for a one-off run without changing the file).
+  - `skip_bulk_mail` — `true` (default) filters out newsletters and
+    marketing email before matching even happens. Set to `false` if you
+    want to see every keyword match with nothing filtered out.
 
 ### If something breaks
 - Gmail access stops working: delete `token.json` and run
