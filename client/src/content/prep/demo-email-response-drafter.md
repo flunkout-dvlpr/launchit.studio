@@ -282,11 +282,26 @@ Everything above only happens once: the Google Cloud setup, and running
 
 ## What we'll walk through
 
-1. Running the one-time authorization script and confirming Gmail access actually works.
-2. Building the script that pulls your last batch of emails and filters them against a keyword list you write yourself.
-3. Writing one locked style instruction, the same idea as the tone-tuning step in the Meditations demo, so every draft sounds like you, not a generic support bot.
-4. Generating drafts for a real batch of your own matched emails and reading them back together.
-5. If there's time left, wiring the approved drafts into your actual Gmail account as real drafts instead of just a local file.
+Here's the shape of what actually gets built, so none of the pieces are a surprise on the day, we won't spend session time explaining what a file is for, just building and tuning them.
+
+**Two scripts do the actual work:**
+- `scripts/auth.js` — run once. Opens your browser, you approve access, it saves a `token.json` so every run after that just works without asking again.
+- `scripts/fetch-emails.js` — the fetch-and-filter step. Pulls your recent inbox emails, skips newsletters, and saves the ones worth a look to `data/matches.json`. This is the part we'll rerun over and over while tuning things live.
+
+**Three plain-text files are what you actually edit, no code, ever:**
+- `keywords.md` — the list of words and phrases that make an email "worth a reply." This is the main dial we'll tune live: too broad and you get noise, too narrow and real questions slip through.
+- `voice.md` — a handful of replies you've actually sent before. This is what keeps drafts sounding like you instead of a generic support bot.
+- `settings.md` — two small switches: how many recent emails to check each run, and whether newsletters get filtered out automatically.
+
+**One output file is what you review:**
+- `output/drafts.md` — after `fetch-emails.js` finds matches, Claude Code reads them and writes a draft reply for each (or "no reply needed," if it's clearly automated or the conversation's already resolved). This is the file you actually read at the end.
+
+With that context in place, the live session is:
+
+1. Confirm Gmail access actually works (the one-time authorization).
+2. Run the fetch-and-filter step against your real inbox, and tune `keywords.md` based on what does and doesn't get caught.
+3. Lock in `voice.md` and generate drafts for a real batch of your own matched emails, reading them back together.
+4. If there's time left, wire the approved drafts into your actual Gmail account as real drafts instead of just a local file.
 
 ## Try it yourself
 
