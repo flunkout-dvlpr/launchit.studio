@@ -1,9 +1,11 @@
-refund
-cancel
-cancellation
-when will my order
-where is my order
-tracking
-reschedule
-refer a friend
 invoice
+receipt
+reschedule
+follow up
+checking in
+any updates
+send you a quote
+proposal
+availability
+schedule a call
+interested in working together
