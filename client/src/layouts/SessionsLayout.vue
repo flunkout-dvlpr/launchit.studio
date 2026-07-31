@@ -3,7 +3,7 @@
     <q-header class="sessions-header">
       <q-toolbar class="sessions-toolbar">
         <router-link to="/sessions" class="sessions-wordmark font-label">
-          <LogoMark :variant="logoVariant" :size="84" class="sessions-wordmark__mark" />
+          <LogoMark :variant="logoVariant" :size="75" class="sessions-wordmark__mark" />
           LAUNCHIT <span class="text-weight-bold">SESSIONS</span>
         </router-link>
 
@@ -160,7 +160,7 @@ function onMenuLeave (el, done) {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   letter-spacing: 0.06em;
   color: var(--navy);
   text-decoration: none;
