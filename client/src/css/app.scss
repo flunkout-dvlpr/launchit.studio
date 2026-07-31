@@ -42,6 +42,8 @@ body {
 // Rotated pill/badge — the primary "maximalist" graphic move. Short label
 // text only (tags, cycle numbers, status) — never body copy.
 .pill-tag {
+  --pill-tilt: -2deg;
+
   display: inline-block;
   font-family: var(--font-label);
   font-size: 0.75rem;
@@ -50,7 +52,7 @@ body {
   text-transform: uppercase;
   padding: 0.3rem 0.85rem;
   border-radius: 999px;
-  transform: rotate(-2deg);
+  transform: rotate(var(--pill-tilt));
   white-space: nowrap;
 
   &--coral { background: var(--coral); color: var(--paper); }
@@ -62,8 +64,26 @@ body {
     color: var(--navy);
   }
 
-  &.tilt-right { transform: rotate(3deg); }
-  &.tilt-left { transform: rotate(-3deg); }
+  &.tilt-right { --pill-tilt: 3deg; }
+  &.tilt-left { --pill-tilt: -3deg; }
+
+  &:hover {
+    animation: pill-jiggle 0.5s ease-in-out;
+  }
+}
+
+@keyframes pill-jiggle {
+  0%, 100% { transform: rotate(var(--pill-tilt)); }
+  20% { transform: rotate(calc(var(--pill-tilt) + 6deg)); }
+  40% { transform: rotate(calc(var(--pill-tilt) - 5deg)); }
+  60% { transform: rotate(calc(var(--pill-tilt) + 3deg)); }
+  80% { transform: rotate(calc(var(--pill-tilt) - 2deg)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-tag:hover {
+    animation: none;
+  }
 }
 
 // Blueprint-style dimension/annotation divider — decorative section break.
