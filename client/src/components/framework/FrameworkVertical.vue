@@ -77,43 +77,31 @@ onMounted(() => {
     }
   })
 
-  // Mobile gets a slightly earlier trigger point and a snappier, shorter-
-  // travel entrance. Touch scrolling tends to move in fast flicks rather
-  // than the slower, steadier scroll a mouse wheel produces, so the
-  // desktop timing (start: 'top 85%', longer travel) reads as sluggish,
-  // still catching up after the item's already scrolled into view.
-  const triggerStart = isMobile ? 'top 92%' : 'top 85%'
-  const triggerFraction = isMobile ? 0.92 : 0.85
+  // Trigger point is a fixed distance from the top of the viewport (roughly
+  // where Source naturally lands after the header, on first load) rather
+  // than a percentage of viewport height. A percentage-based threshold
+  // like 'top 85%' covers almost the entire screen, so on a load where two
+  // or three steps are already above that line, ScrollTrigger fires all of
+  // them in the same frame (it evaluates against current scroll position
+  // immediately on creation, it doesn't wait for an actual scroll gesture).
+  // A narrow fixed-height band near the top can't have that problem:
+  // consecutive step nodes are spaced well over 150px apart, so at most one
+  // can ever sit inside a ~200-250px window at a given scroll position,
+  // load included. Nothing to stagger or work around, it's just not
+  // geometrically possible for two to trigger at once.
+  const triggerStart = isMobile ? 'top 220px' : 'top 260px'
 
-  // ScrollTrigger fires a trigger immediately on creation if it's already
-  // past its start point, it doesn't wait for an actual scroll gesture.
-  // Whenever the viewport's tall enough (or the trigger point loose enough)
-  // that more than one step already satisfies that on load, they all fire
-  // in the same frame, several icons play before the user's scrolled at
-  // all, and by the time those steps are actually brought into focus
-  // they're already sitting still. Steps already visible at load get a
-  // manual stagger to fix that; steps below the fold don't need one,
-  // scrolling to reach them already spaces them out naturally.
-  let alreadyVisible = 0
   timelineEl.value.querySelectorAll('.framework-step').forEach((el, i) => {
-    const isAlreadyVisible = el.getBoundingClientRect().top < window.innerHeight * triggerFraction
-    const delay = isAlreadyVisible ? alreadyVisible * 0.18 : 0
-    if (isAlreadyVisible) alreadyVisible++
-
     gsap.from(el, {
       x: isMobile ? -10 : -16,
       autoAlpha: 0,
       duration: isMobile ? 0.4 : 0.5,
-      delay,
       ease: 'power2.out',
-      // onStart (not ScrollTrigger's onEnter) so the icon plays in sync
-      // with this tween's own delay above, onEnter fires the instant
-      // ScrollTrigger detects entry, ignoring any delay on the tween.
-      onStart: () => iconRefs[i] && iconRefs[i].play(),
       scrollTrigger: {
         trigger: el,
         start: triggerStart,
-        once: true
+        once: true,
+        onEnter: () => iconRefs[i] && iconRefs[i].play()
       }
     })
   })
