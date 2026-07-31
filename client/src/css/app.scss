@@ -19,6 +19,17 @@ body {
   color: var(--navy);
 }
 
+// Brand coral instead of the browser's default blue text-selection
+// highlight.
+::selection {
+  background: var(--coral);
+  color: var(--paper);
+}
+::-moz-selection {
+  background: var(--coral);
+  color: var(--paper);
+}
+
 // Retro cursors from the "Jeelh Retro Cursors" pack (Light variant),
 // .cur files, not hand-built SVG, real cursor art with its own embedded
 // hotspot metadata, no x/y coordinates needed in the url() the way a
