@@ -43,7 +43,7 @@
           in the open.
         </p>
         <div class="hero__ctas">
-          <q-btn to="/sessions/about" unelevated no-caps label="How it works" class="hero__cta-primary font-label" />
+          <q-btn to="/sessions/about" unelevated no-caps label="Why this exists" class="hero__cta-primary font-label" />
           <q-btn to="/sessions/framework" outline no-caps label="See the framework" class="hero__cta-secondary font-label" />
         </div>
       </div>
