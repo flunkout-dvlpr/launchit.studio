@@ -1,5 +1,5 @@
 <template>
-  <svg :width="size" :height="size" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" class="logo-mark">
+  <svg :width="width" :height="size" viewBox="15 26 90 68" xmlns="http://www.w3.org/2000/svg" class="logo-mark">
     <g stroke="var(--gridline)" stroke-width="1.5" opacity="0.55">
       <line x1="20" y1="40" x2="20" y2="80" /><line x1="40" y1="40" x2="40" y2="80" />
       <line x1="60" y1="40" x2="60" y2="80" /><line x1="80" y1="40" x2="80" y2="80" />
@@ -30,17 +30,25 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   variant: {
     type: String,
     default: 'L',
     validator: (v) => ['L', 'rocket'].includes(v)
   },
+  // Controls rendered height. Width is derived from the viewBox's actual
+  // aspect ratio (90x68, wider than tall) rather than forced square,
+  // forcing a square box just reintroduces the empty top/bottom padding
+  // the tighter viewBox was meant to remove.
   size: {
     type: [Number, String],
     default: 32
   }
 })
+
+const width = computed(() => (Number(props.size) * 90) / 68)
 </script>
 
 <style scoped>
