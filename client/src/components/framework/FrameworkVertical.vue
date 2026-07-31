@@ -36,21 +36,34 @@ function setIconRef (el, i) {
 }
 
 onMounted(() => {
+  // The track's left offset and the entrance-animation feel both depend on
+  // node size, which shrinks on mobile (see the media query below), so both
+  // need to know which layout is active. Read once on mount rather than
+  // reacting live to resize, orientation changes mid-scroll aren't worth
+  // the complexity here.
+  const isMobile = window.matchMedia('(max-width: 720px)').matches
+
   // Position the track to run exactly from the first node's center to the
   // last node's center — the container itself is taller than that (the
   // last item's title/body trail below its node), so anchoring to the
   // container's top/bottom edges left the line dangling past the final
-  // bubble.
+  // bubble. Horizontal centering is computed the same way rather than
+  // hardcoded, node size and container padding both change on mobile
+  // (see the media query below), and a fixed px value would drift out of
+  // alignment the moment either one does.
   const nodes = timelineEl.value.querySelectorAll('.framework-step__node')
   const trackEl = timelineEl.value.querySelector('.framework-timeline__track')
-  const containerTop = timelineEl.value.getBoundingClientRect().top
+  const containerRect = timelineEl.value.getBoundingClientRect()
   const firstNode = nodes[0]
   const lastNode = nodes[nodes.length - 1]
-  const firstCenter = firstNode.getBoundingClientRect().top - containerTop + firstNode.offsetHeight / 2
-  const lastCenter = lastNode.getBoundingClientRect().top - containerTop + lastNode.offsetHeight / 2
+  const firstNodeRect = firstNode.getBoundingClientRect()
+  const firstCenter = firstNodeRect.top - containerRect.top + firstNode.offsetHeight / 2
+  const lastCenter = lastNode.getBoundingClientRect().top - containerRect.top + lastNode.offsetHeight / 2
+  const nodeCenterX = firstNodeRect.left - containerRect.left + firstNode.offsetWidth / 2
   trackEl.style.top = `${firstCenter}px`
   trackEl.style.bottom = 'auto'
   trackEl.style.height = `${lastCenter - firstCenter}px`
+  trackEl.style.left = `${nodeCenterX - 1}px`
 
   gsap.set(progressEl.value, { scaleY: 0, transformOrigin: 'top' })
   gsap.to(progressEl.value, {
@@ -64,15 +77,20 @@ onMounted(() => {
     }
   })
 
+  // Mobile gets a slightly earlier trigger point and a snappier, shorter-
+  // travel entrance. Touch scrolling tends to move in fast flicks rather
+  // than the slower, steadier scroll a mouse wheel produces, so the
+  // desktop timing (start: 'top 85%', longer travel) reads as sluggish,
+  // still catching up after the item's already scrolled into view.
   timelineEl.value.querySelectorAll('.framework-step').forEach((el, i) => {
     gsap.from(el, {
-      x: -16,
+      x: isMobile ? -10 : -16,
       autoAlpha: 0,
-      duration: 0.5,
+      duration: isMobile ? 0.4 : 0.5,
       ease: 'power2.out',
       scrollTrigger: {
         trigger: el,
-        start: 'top 85%',
+        start: isMobile ? 'top 92%' : 'top 85%',
         once: true,
         onEnter: () => iconRefs[i] && iconRefs[i].play()
       }
@@ -86,6 +104,11 @@ onMounted(() => {
   position: relative;
   max-width: 680px;
   margin: 0 auto;
+  padding: 0 1.5rem;
+
+  @media (max-width: 720px) {
+    padding: 0 1.25rem;
+  }
 }
 
 .framework-timeline__track {
@@ -119,6 +142,11 @@ onMounted(() => {
   &:last-child {
     margin-bottom: 0;
   }
+
+  @media (max-width: 720px) {
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
 }
 
 .framework-step__node {
@@ -132,12 +160,30 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   z-index: 1;
+
+  @media (max-width: 720px) {
+    width: 72px;
+    height: 72px;
+
+    // The icon's own :size prop stays fixed (it's tuned for the desktop
+    // detail view), CSS just scales the rendered SVG down to fit the
+    // smaller node — safe because every icon uses a fixed 100x100
+    // viewBox, so this is a uniform visual scale, not a geometry change.
+    :deep(svg) {
+      width: 72px;
+      height: 72px;
+    }
+  }
 }
 
 .framework-step__title {
   font-size: 1.15rem;
   font-weight: 600;
   margin: 0.1rem 0 0.4rem;
+
+  @media (max-width: 720px) {
+    font-size: 1.05rem;
+  }
 }
 
 .framework-step__body {

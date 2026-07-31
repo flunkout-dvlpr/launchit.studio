@@ -75,12 +75,20 @@ const steps = [
 .framework-page {
   background: var(--paper);
   padding: 4rem 0 5rem;
+
+  @media (max-width: 720px) {
+    padding: 2.75rem 0 3.5rem;
+  }
 }
 
 .framework-page__header {
   max-width: 680px;
   margin: 0 auto 3.5rem;
   padding: 0 1.5rem;
+
+  @media (max-width: 720px) {
+    padding: 0 1.25rem;
+  }
 }
 
 .framework-page__title {
