@@ -3,7 +3,7 @@ type: demo
 series: "A build-it-yourself Sessions demo"
 slug: demo-email-response-drafter
 title: "An email response drafter you can build in one sitting"
-order: 5
+order: 0
 date: "A Sessions-format demo"
 readTime: "~8 minutes"
 ---
