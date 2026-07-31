@@ -3,6 +3,7 @@
     <q-header class="sessions-header">
       <q-toolbar class="sessions-toolbar">
         <router-link to="/sessions" class="sessions-wordmark font-label">
+          <LogoMark :variant="logoVariant" :size="28" class="sessions-wordmark__mark" />
           LAUNCHIT <span class="text-weight-bold">SESSIONS</span>
         </router-link>
 
@@ -76,10 +77,16 @@
 import { ref, watch, onBeforeUnmount } from 'vue'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
+import LogoMark from 'components/LogoMark.vue'
 
 const mobileMenuOpen = ref(false)
 const mobileMenuNav = ref(null)
 const prefersReducedMotion = usePrefersReducedMotion()
+
+// Informal A/B: picked once per full page load (this layout persists across
+// client-side route changes within /sessions, so it won't flicker between
+// the two while navigating, only a hard refresh re-rolls it).
+const logoVariant = Math.random() < 0.5 ? 'L' : 'rocket'
 
 const navLinks = [
   { to: '/sessions/about', label: 'About' },
@@ -150,10 +157,17 @@ function onMenuLeave (el, done) {
 }
 
 .sessions-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.9rem;
   letter-spacing: 0.06em;
   color: var(--navy);
   text-decoration: none;
+}
+
+.sessions-wordmark__mark {
+  flex: none;
 }
 
 .sessions-nav {
