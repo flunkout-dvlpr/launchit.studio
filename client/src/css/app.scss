@@ -2,18 +2,19 @@
 // Palette/type rationale: /docs/brand-identity.md at repo root.
 
 :root {
-  --paper: #F4F0E6;
-  --navy: #1E2B3C;
-  --gridline: #3E7CA6;
-  --coral: #D85A30;
-  --gold: #EF9F27;
-  --teal: #1D9E75;
+  --paper: #f4f0e6;
+  --navy: #1e2b3c;
+  --gridline: #3e7ca6;
+  --coral: #d85a30;
+  --gold: #ef9f27;
+  --teal: #1d9e75;
 
-  --font-label: 'Space Grotesk', sans-serif;
-  --font-display: 'Fraunces', serif;
+  --font-label: "Space Grotesk", sans-serif;
+  --font-display: "Fraunces", serif;
 }
 
-html, body {
+html,
+body {
   background: var(--paper);
   color: var(--navy);
 }
@@ -26,7 +27,7 @@ html, body {
 // the instant you hover them, breaking the effect exactly where people
 // click most.
 * {
-  cursor: url('/cursors/arrow.cur'), auto !important;
+  cursor: url("/cursors/arrow.cur"), auto !important;
 }
 
 // Wherever the browser would normally switch to its own pointer cursor:
@@ -34,14 +35,31 @@ html, body {
 // `a`/`button` are more specific than the `*` rule above, but !important
 // rules only compete with other !important rules, a normal-specificity
 // win here wouldn't be enough to beat the arrow rule's !important.
-a, button, [role='button'], label, .q-btn, select,
-input[type='checkbox'], input[type='radio'] {
-  cursor: url('/cursors/pointer.cur'), pointer !important;
+//
+// Also needs to cover every descendant (the trailing `X *` on each),
+// not just the clickable element itself. The base `* { cursor: arrow }`
+// rule above matches every element including a button's inner content
+// wrapper (Quasar renders one, .q-btn__content, filling nearly the whole
+// button), and a cursor set directly on an element always wins over one
+// inherited from its parent. Without this, only the sliver of the button
+// not covered by that inner wrapper showed the hand, dead center fell
+// back to the arrow.
+a, a *,
+button, button *,
+[role="button"], [role="button"] *,
+label, label *,
+.q-btn, .q-btn *,
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: url("/cursors/pointer.cur"), pointer !important;
 }
 
 // Scrollbars hidden site-wide, on every element, not just the page itself.
 // Scrolling still works everywhere, this only hides the visible bar.
-*, html, body {
+*,
+html,
+body {
   scrollbar-width: none; // Firefox
   -ms-overflow-style: none; // legacy Edge/IE
 
@@ -65,8 +83,10 @@ body {
 // Low-opacity graph-paper texture for structural pages (About, Framework).
 // Applied as a class on a section/page wrapper, not globally.
 .grid-texture {
-  background-image:
-    linear-gradient(rgba(62, 124, 166, 0.14) 1px, transparent 1px),
+  background-image: linear-gradient(
+      rgba(62, 124, 166, 0.14) 1px,
+      transparent 1px
+    ),
     linear-gradient(90deg, rgba(62, 124, 166, 0.14) 1px, transparent 1px);
   background-size: 32px 32px;
 }
@@ -88,17 +108,30 @@ body {
   white-space: nowrap;
   user-select: none;
 
-  &--coral { background: var(--coral); color: var(--paper); }
-  &--gold { background: var(--gold); color: var(--navy); }
-  &--teal { background: var(--teal); color: var(--paper); }
+  &--coral {
+    background: var(--coral);
+    color: var(--paper);
+  }
+  &--gold {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  &--teal {
+    background: var(--teal);
+    color: var(--paper);
+  }
   &--outline {
     background: transparent;
     border: 1.5px solid var(--navy);
     color: var(--navy);
   }
 
-  &.tilt-right { --pill-tilt: 3deg; }
-  &.tilt-left { --pill-tilt: -3deg; }
+  &.tilt-right {
+    --pill-tilt: 3deg;
+  }
+  &.tilt-left {
+    --pill-tilt: -3deg;
+  }
 
   &:hover {
     animation: pill-jiggle 0.5s ease-in-out;
@@ -106,11 +139,22 @@ body {
 }
 
 @keyframes pill-jiggle {
-  0%, 100% { transform: rotate(var(--pill-tilt)); }
-  20% { transform: rotate(calc(var(--pill-tilt) + 6deg)); }
-  40% { transform: rotate(calc(var(--pill-tilt) - 5deg)); }
-  60% { transform: rotate(calc(var(--pill-tilt) + 3deg)); }
-  80% { transform: rotate(calc(var(--pill-tilt) - 2deg)); }
+  0%,
+  100% {
+    transform: rotate(var(--pill-tilt));
+  }
+  20% {
+    transform: rotate(calc(var(--pill-tilt) + 6deg));
+  }
+  40% {
+    transform: rotate(calc(var(--pill-tilt) - 5deg));
+  }
+  60% {
+    transform: rotate(calc(var(--pill-tilt) + 3deg));
+  }
+  80% {
+    transform: rotate(calc(var(--pill-tilt) - 2deg));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -127,14 +171,19 @@ body {
   opacity: 0.5;
   margin: 2.5rem 0;
 
-  &::before, &::after {
-    content: '';
+  &::before,
+  &::after {
+    content: "";
     position: absolute;
     top: -4px;
     width: 1px;
     height: 9px;
     background: var(--gridline);
   }
-  &::before { left: 0; }
-  &::after { right: 0; }
+  &::before {
+    left: 0;
+  }
+  &::after {
+    right: 0;
+  }
 }
