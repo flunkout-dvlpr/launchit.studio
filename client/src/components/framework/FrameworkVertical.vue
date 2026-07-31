@@ -77,19 +77,15 @@ onMounted(() => {
     }
   })
 
-  // Trigger point is a fixed distance from the top of the viewport (roughly
-  // where Source naturally lands after the header, on first load) rather
-  // than a percentage of viewport height. A percentage-based threshold
-  // like 'top 85%' covers almost the entire screen, so on a load where two
-  // or three steps are already above that line, ScrollTrigger fires all of
-  // them in the same frame (it evaluates against current scroll position
-  // immediately on creation, it doesn't wait for an actual scroll gesture).
-  // A narrow fixed-height band near the top can't have that problem:
-  // consecutive step nodes are spaced well over 150px apart, so at most one
-  // can ever sit inside a ~200-250px window at a given scroll position,
-  // load included. Nothing to stagger or work around, it's just not
-  // geometrically possible for two to trigger at once.
-  const triggerStart = isMobile ? 'top 220px' : 'top 260px'
+  // Trigger point is the vertical center of the viewport, a step reveals
+  // once its top crosses the middle of the screen. Narrow enough that two
+  // steps sharing it at once is rare (consecutive nodes are spaced well
+  // over 150px apart), without pinning it up near the top edge, which
+  // left the screen looking empty on load and mostly blank through most
+  // of each scroll (a step only appearing once nearly at the top).
+  // Center keeps the screen feeling full while scrolling and the first
+  // step visible without a gap on load.
+  const triggerStart = 'top center'
 
   timelineEl.value.querySelectorAll('.framework-step').forEach((el, i) => {
     gsap.from(el, {
