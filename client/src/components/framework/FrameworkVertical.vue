@@ -35,22 +35,19 @@ function setIconRef (el, i) {
   if (el) iconRefs[i] = el
 }
 
-onMounted(() => {
-  // The track's left offset and the entrance-animation feel both depend on
-  // node size, which shrinks on mobile (see the media query below), so both
-  // need to know which layout is active. Read once on mount rather than
-  // reacting live to resize, orientation changes mid-scroll aren't worth
-  // the complexity here.
-  const isMobile = window.matchMedia('(max-width: 720px)').matches
-
-  // Position the track to run exactly from the first node's center to the
-  // last node's center — the container itself is taller than that (the
-  // last item's title/body trail below its node), so anchoring to the
-  // container's top/bottom edges left the line dangling past the final
-  // bubble. Horizontal centering is computed the same way rather than
-  // hardcoded, node size and container padding both change on mobile
-  // (see the media query below), and a fixed px value would drift out of
-  // alignment the moment either one does.
+// Position the track to run exactly from the first node's center to the
+// last node's center — the container itself is taller than that (the last
+// item's title/body trail below its node), so anchoring to the container's
+// top/bottom edges left the line dangling past the final bubble. Horizontal
+// centering is computed the same way rather than hardcoded, node size and
+// container padding both change on mobile, and a fixed px value would drift
+// out of alignment the moment either one does. Pulled out as its own
+// function so it can be re-run after web fonts finish loading, not just
+// once on mount, the self-hosted fonts can swap in a beat after first
+// paint and reflow the body text, which shifts every node below the one
+// that rewrapped and left the track measured against stale positions,
+// short of the last node.
+function positionTrack () {
   const nodes = timelineEl.value.querySelectorAll('.framework-step__node')
   const trackEl = timelineEl.value.querySelector('.framework-timeline__track')
   const containerRect = timelineEl.value.getBoundingClientRect()
@@ -64,6 +61,27 @@ onMounted(() => {
   trackEl.style.bottom = 'auto'
   trackEl.style.height = `${lastCenter - firstCenter}px`
   trackEl.style.left = `${nodeCenterX - 1}px`
+}
+
+onMounted(() => {
+  // The entrance-animation feel depends on node size, which shrinks on
+  // mobile (see the media query below). Read once on mount rather than
+  // reacting live to resize, orientation changes mid-scroll aren't worth
+  // the complexity here.
+  const isMobile = window.matchMedia('(max-width: 720px)').matches
+
+  positionTrack()
+
+  // Web fonts can finish loading after this first measurement and reflow
+  // the body text, re-measure and tell ScrollTrigger to recalculate once
+  // that settles so both the track and every scroll trigger's positions
+  // stay accurate.
+  if (document.fonts) {
+    document.fonts.ready.then(() => {
+      positionTrack()
+      ScrollTrigger.refresh()
+    })
+  }
 
   gsap.set(progressEl.value, { scaleY: 0, transformOrigin: 'top' })
   gsap.to(progressEl.value, {
