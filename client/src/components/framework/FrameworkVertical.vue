@@ -82,17 +82,38 @@ onMounted(() => {
   // than the slower, steadier scroll a mouse wheel produces, so the
   // desktop timing (start: 'top 85%', longer travel) reads as sluggish,
   // still catching up after the item's already scrolled into view.
+  const triggerStart = isMobile ? 'top 92%' : 'top 85%'
+  const triggerFraction = isMobile ? 0.92 : 0.85
+
+  // ScrollTrigger fires a trigger immediately on creation if it's already
+  // past its start point, it doesn't wait for an actual scroll gesture.
+  // Whenever the viewport's tall enough (or the trigger point loose enough)
+  // that more than one step already satisfies that on load, they all fire
+  // in the same frame, several icons play before the user's scrolled at
+  // all, and by the time those steps are actually brought into focus
+  // they're already sitting still. Steps already visible at load get a
+  // manual stagger to fix that; steps below the fold don't need one,
+  // scrolling to reach them already spaces them out naturally.
+  let alreadyVisible = 0
   timelineEl.value.querySelectorAll('.framework-step').forEach((el, i) => {
+    const isAlreadyVisible = el.getBoundingClientRect().top < window.innerHeight * triggerFraction
+    const delay = isAlreadyVisible ? alreadyVisible * 0.18 : 0
+    if (isAlreadyVisible) alreadyVisible++
+
     gsap.from(el, {
       x: isMobile ? -10 : -16,
       autoAlpha: 0,
       duration: isMobile ? 0.4 : 0.5,
+      delay,
       ease: 'power2.out',
+      // onStart (not ScrollTrigger's onEnter) so the icon plays in sync
+      // with this tween's own delay above, onEnter fires the instant
+      // ScrollTrigger detects entry, ignoring any delay on the tween.
+      onStart: () => iconRefs[i] && iconRefs[i].play(),
       scrollTrigger: {
         trigger: el,
-        start: isMobile ? 'top 92%' : 'top 85%',
-        once: true,
-        onEnter: () => iconRefs[i] && iconRefs[i].play()
+        start: triggerStart,
+        once: true
       }
     })
   })
