@@ -3,7 +3,7 @@
     <q-header class="sessions-header">
       <q-toolbar class="sessions-toolbar">
         <router-link to="/sessions" class="sessions-wordmark font-label">
-          <LogoMark :variant="logoVariant" :size="28" class="sessions-wordmark__mark" />
+          <LogoMark :variant="logoVariant" :size="84" class="sessions-wordmark__mark" />
           LAUNCHIT <span class="text-weight-bold">SESSIONS</span>
         </router-link>
 
