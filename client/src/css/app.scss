@@ -18,31 +18,25 @@ html, body {
   color: var(--navy);
 }
 
-// Retro pixel-art arrow, on every element, not just the page's default
-// state, otherwise links/buttons fall back to the browser's normal pointer
+// Retro cursors from the "Jeelh Retro Cursors" pack (Light variant),
+// .cur files, not hand-built SVG, real cursor art with its own embedded
+// hotspot metadata, no x/y coordinates needed in the url() the way a
+// plain image would. On every element, not just the page's default state,
+// otherwise links/buttons fall back to the browser's normal arrow/pointer
 // the instant you hover them, breaking the effect exactly where people
-// click most. Hand-built as a 12x19 bitmap of SVG rects at 3px/cell (see
-// public/cursors/arrow.svg), no photo/image asset. Hotspot 0 0 puts the
-// click point at the arrow's tip, matching where it sits in the bitmap.
-// `auto` fallback for anything that can't load the SVG.
+// click most.
 * {
-  cursor: url('/cursors/arrow.svg') 0 0, auto !important;
+  cursor: url('/cursors/arrow.cur'), auto !important;
 }
 
-// Retro pixel-art pointing hand, same technique (see public/cursors/
-// pointer.svg), wherever the browser would normally switch to its own
-// pointer cursor: links, buttons, and anything else clickable. Needs
-// !important too, `a`/`button` are more specific than the `*` rule above,
-// but !important rules only compete with other !important rules, a normal-
-// specificity win here wouldn't be enough to beat the arrow rule's
-// !important. Fingertip is tapered to a true single pixel (was a flat
-// 3-wide cap) so the hotspot, 10 0, lands on something visually obvious
-// instead of being buried in an ambiguous wide area, that's what made it
-// feel like the trigger area had shrunk, the visible "point" of the icon
-// didn't match where clicks actually registered.
+// Wherever the browser would normally switch to its own pointer cursor:
+// links, buttons, and anything else clickable. Needs !important too,
+// `a`/`button` are more specific than the `*` rule above, but !important
+// rules only compete with other !important rules, a normal-specificity
+// win here wouldn't be enough to beat the arrow rule's !important.
 a, button, [role='button'], label, .q-btn, select,
 input[type='checkbox'], input[type='radio'] {
-  cursor: url('/cursors/pointer.svg') 10 0, pointer !important;
+  cursor: url('/cursors/pointer.cur'), pointer !important;
 }
 
 // Scrollbars hidden site-wide, on every element, not just the page itself.
