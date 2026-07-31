@@ -144,7 +144,10 @@ async function main () {
   const keywords = await loadKeywords()
 
   console.log(`Fetching last ${N} messages (bulk-mail filter: ${settings.skip_bulk_mail ? 'on' : 'off'})...`)
-  const list = await gmail.users.messages.list({ userId: 'me', maxResults: N })
+  // Without labelIds restricting to INBOX, this pulls from the whole
+  // account, including mail the user sent themselves. A "reply to this"
+  // tool has no business drafting a reply to something the user wrote.
+  const list = await gmail.users.messages.list({ userId: 'me', maxResults: N, labelIds: ['INBOX'] })
   const ids = (list.data.messages || []).map(m => m.id)
 
   const matches = []

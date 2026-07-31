@@ -121,11 +121,11 @@ exactly what to click next.
   someone with no coding background, it shouldn't be able to crash anything.
 - `scripts/auth.js` — a one-time script that opens your browser, asks you to
   approve access, and saves `token.json`
-- `scripts/fetch-emails.js` — pulls recent emails per `settings.md` (a
-  number passed on the command line overrides it for one run only, e.g.
-  `node scripts/fetch-emails.js 100`), skips bulk/newsletter mail unless
-  turned off, extracts clean plain-text bodies, and saves the ones matching
-  `keywords.md` to `data/matches.json`
+- `scripts/fetch-emails.js` — pulls recent **inbox** emails per
+  `settings.md` (a number passed on the command line overrides it for one
+  run only, e.g. `node scripts/fetch-emails.js 100`), skips bulk/newsletter
+  mail unless turned off, extracts clean plain-text bodies, and saves the
+  ones matching `keywords.md` to `data/matches.json`
 - `output/drafts.md` — one draft reply per matched email, written here for
   you to review. Nothing is sent, and nothing touches Gmail automatically.
 
@@ -133,6 +133,34 @@ exactly what to click next.
 Start with `gmail.readonly` and, only if you want the stretch goal below,
 `gmail.compose`. Do not request `gmail.send` — this project drafts, it
 never sends on its own.
+
+## The drafting instruction
+There's no script for this part, and deliberately so, no second AI API key
+to manage, Claude Code reads `data/matches.json` directly and writes
+`output/drafts.md` itself when asked. But "ask it to draft replies" isn't
+specific enough to get consistent results run to run, so use this exact
+instruction every time, the same locked-instruction idea the tone-tuning in
+the Meditations demo series uses:
+
+> Read every entry in `data/matches.json`. For each one, write "No reply
+> needed" and a one-line reason instead of a draft if either is true: the
+> sender is clearly automated (a no-reply address, a verification code, a
+> system notification, a receipt), or it's a real person but the thread
+> already reads as resolved (someone already confirmed, thanked, or closed
+> the loop, check other matched entries from the same thread/subject line
+> too, not just this one in isolation). Otherwise, write a reply in the
+> voice shown by the examples in `voice.md`: warm but not gushing, direct,
+> 2-4 sentences, acknowledge specifically what they asked, and give a real
+> answer or a clear next step rather than a generic acknowledgment. No
+> corporate hedging, no "we value your business" filler. Write every
+> result to `output/drafts.md`, one entry per matched email, each under a
+> heading with the sender and subject line it's replying to.
+
+If drafts consistently come out too stiff, too casual, too long, or
+whatever else feels off, don't ask for a one-off fix on a single draft,
+add or swap examples in `voice.md` instead, or tighten the instruction
+above, and redraft everything. The goal is one consistent voice across all
+drafts, not each draft individually adjusted by hand.
 
 ## Conventions
 - Never commit `credentials.json`, `token.json`, `data/`, or `output/`.
@@ -146,6 +174,12 @@ never sends on its own.
   rather than improvising a new tone each time.
 - Keyword matching should be case-insensitive and check both the subject
   line and the email body.
+- **Restrict fetching to the inbox** (`labelIds: ['INBOX']` on the Gmail
+  API list call). Without it, results include mail the account owner sent
+  themselves, confirmed against a real account, where a reply-all thread
+  put the user's own sent message back in scope and it got treated as
+  something needing a reply to itself. A drafting tool has no reason to
+  ever see outgoing mail.
 - **Skip bulk/newsletter mail before keyword matching, not after**, when
   `settings.md`'s `skip_bulk_mail` is on (the default). Filter out anything
   with a `List-Unsubscribe` header (required by law on bulk mail, never
@@ -181,12 +215,10 @@ never sends on its own.
    run. Confirm it pulls real recent emails and saves clean, readable
    keyword matches to `data/matches.json`, spot-check a couple of matched
    bodies for leftover HTML/CSS junk before moving on.
-3. For each matched email, draft a reply using `voice.md` as the style
-   guide, or "No reply needed" for anything clearly automated. Write all
-   drafts to `output/drafts.md`, one per matched email, each labeled with
-   the sender and subject line it's replying to.
+3. Follow the drafting instruction above to write `output/drafts.md`.
 4. Review `output/drafts.md` together. If a draft doesn't sound right,
-   tighten the style instruction rather than fixing that one draft by hand.
+   tighten the drafting instruction or `voice.md` rather than fixing that
+   one draft by hand.
 5. Stretch goal, if there's time left: use the `gmail.compose` scope to save
    the approved drafts directly into the Gmail account as real drafts,
    instead of just a local markdown file.
@@ -199,10 +231,12 @@ never sends on its own.
 - Any hosting or deployment. This runs locally, on demand, whenever you run it.
 
 ## Definition of done
-- `scripts/fetch-emails.js` pulls real emails, skips bulk/newsletter mail,
-  and filters clean plain-text bodies correctly against `keywords.md`
-- `output/drafts.md` contains one on-voice draft per real matched email,
-  or a clearly marked "no reply needed" for automated ones
+- `scripts/fetch-emails.js` pulls real inbox emails (never the user's own
+  sent mail), skips bulk/newsletter mail, and filters clean plain-text
+  bodies correctly against `keywords.md`
+- `output/drafts.md` contains one on-voice draft per real matched email
+  that's genuinely open, or a clearly marked "no reply needed" for
+  automated senders and already-resolved threads
 - Nothing was sent, and no credentials were committed to version control
 
 ## Running it again (after the first build)
@@ -210,9 +244,10 @@ Everything above only happens once: the Google Cloud setup, and running
 `scripts/auth.js`. Using this day to day afterward is just:
 
 1. Open this folder in Claude Code.
-2. Ask it to run `scripts/fetch-emails.js` and then draft replies from
-   whatever lands in `data/matches.json`, the same thing that happened
-   during the first build, just without needing to write any new code.
+2. Ask it to run `scripts/fetch-emails.js`, then point it at the drafting
+   instruction above and ask it to follow that. Reusing the same wording
+   every time is what keeps drafts consistent, don't paraphrase it from
+   memory.
 3. Open `output/drafts.md`, read the drafts, copy whatever's good into a
    real reply. Nothing here sends anything on its own, ever.
 
