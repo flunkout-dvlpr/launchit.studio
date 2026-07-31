@@ -17,6 +17,7 @@ const routes = [
       { path: 'about', name: 'sessions-about', component: () => import('pages/sessions/AboutPage.vue') },
       { path: 'framework', name: 'sessions-framework', component: () => import('pages/sessions/FrameworkPage.vue') },
       { path: 'setup', name: 'sessions-setup', component: () => import('pages/sessions/SetupPage.vue') },
+      { path: 'submit', name: 'sessions-submit', component: () => import('pages/sessions/SubmitPage.vue') },
       { path: 'prep', name: 'sessions-prep-index', component: () => import('pages/sessions/PrepIndexPage.vue') },
       { path: 'prep/:slug', name: 'sessions-prep-artifact', component: () => import('pages/sessions/PrepArtifactPage.vue'), props: true }
     ]

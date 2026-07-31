@@ -71,9 +71,17 @@
         <div v-else class="current-cycle__card">
           <h2 class="font-display current-cycle__title">Submissions are open.</h2>
           <p class="font-label current-cycle__business">
-            Use cases are currently sourced via Impact Hub Houston's LinkedIn — see
-            the Framework page for how selection works.
+            Use cases come in via Impact Hub Houston's LinkedIn or straight from
+            you, see the Framework page for how selection works.
           </p>
+          <q-btn
+            to="/sessions/submit"
+            unelevated
+            no-caps
+            label="Submit a use case"
+            icon-right="arrow_forward"
+            class="hero__cta-primary font-label"
+          />
         </div>
       </div>
     </section>
