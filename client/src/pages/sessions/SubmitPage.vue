@@ -32,7 +32,7 @@
           </div>
           <div class="submit-field">
             <label class="font-label submit-field__label" for="phone">Phone (optional)</label>
-            <input id="phone" v-model="form.phone" class="submit-field__input font-label" type="tel" />
+            <input id="phone" v-model="phoneDisplay" class="submit-field__input font-label" type="tel" placeholder="(000) - 000 - 0000" />
           </div>
         </div>
 
@@ -108,6 +108,18 @@ const form = reactive({
 
 const isValid = computed(() => {
   return Boolean(form.name && form.email && form.problem && form.canCommit)
+})
+
+function formatPhone (raw) {
+  const digits = raw.replace(/\D/g, '').slice(0, 10)
+  if (digits.length < 4) return digits.length ? `(${digits}` : ''
+  if (digits.length < 7) return `(${digits.slice(0, 3)}) - ${digits.slice(3)}`
+  return `(${digits.slice(0, 3)}) - ${digits.slice(3, 6)} - ${digits.slice(6)}`
+}
+
+const phoneDisplay = computed({
+  get: () => form.phone,
+  set: (value) => { form.phone = formatPhone(value) }
 })
 
 function handleSubmit () {
