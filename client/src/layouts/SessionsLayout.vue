@@ -9,7 +9,7 @@
 
         <q-space />
 
-        <nav class="sessions-nav gt-xs">
+        <nav ref="navEl" class="sessions-nav gt-xs">
           <router-link
             v-for="link in navLinks"
             :key="link.to"
@@ -82,6 +82,7 @@ import LogoMark from 'components/LogoMark.vue'
 const mobileMenuOpen = ref(false)
 const mobileMenuNav = ref(null)
 const wordmarkEl = ref(null)
+const navEl = ref(null)
 const prefersReducedMotion = usePrefersReducedMotion()
 
 // Informal A/B: picked once per full page load (this layout persists across
@@ -90,12 +91,19 @@ const prefersReducedMotion = usePrefersReducedMotion()
 const logoVariant = Math.random() < 0.5 ? 'L' : 'rocket'
 
 onMounted(() => {
+  if (prefersReducedMotion.value) return
+
   // router-link is a component, not a plain element — .$el is the actual
   // rendered <a> tag GSAP needs to animate.
-  const el = wordmarkEl.value?.$el
-  if (!el) return
-  if (prefersReducedMotion.value) return
-  gsap.from(el, { x: -40, autoAlpha: 0, duration: 0.6, ease: 'power3.out' })
+  const wordmark = wordmarkEl.value?.$el
+  if (wordmark) {
+    gsap.from(wordmark, { x: -40, autoAlpha: 0, duration: 0.6, ease: 'power3.out' })
+  }
+
+  if (navEl.value) {
+    const links = navEl.value.querySelectorAll('.sessions-nav__link')
+    gsap.from(links, { x: 40, autoAlpha: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' })
+  }
 })
 
 const navLinks = [
