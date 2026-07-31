@@ -27,26 +27,28 @@
           flat
           dense
           round
-          icon="menu"
+          :icon="mobileMenuOpen ? 'close' : 'menu'"
           aria-label="Menu"
-          @click="drawerOpen = !drawerOpen"
+          @click="mobileMenuOpen = !mobileMenuOpen"
         />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="drawerOpen" side="right" overlay class="lt-sm">
-      <q-list>
-        <q-item
-          v-for="link in navLinks"
-          :key="link.to"
-          :to="link.to"
-          clickable
-          @click="drawerOpen = false"
-        >
-          <q-item-section class="font-label">{{ link.label }}</q-item-section>
-        </q-item>
-      </q-list>
-    </q-drawer>
+    <Transition :css="false" @enter="onMenuEnter" @leave="onMenuLeave">
+      <div v-if="mobileMenuOpen" class="mobile-menu lt-sm">
+        <nav ref="mobileMenuNav" class="mobile-menu__nav">
+          <router-link
+            v-for="link in navLinks"
+            :key="link.to"
+            :to="link.to"
+            class="mobile-menu__link font-display"
+            @click="mobileMenuOpen = false"
+          >
+            {{ link.label }}
+          </router-link>
+        </nav>
+      </div>
+    </Transition>
 
     <q-page-container>
       <router-view />
@@ -71,10 +73,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onBeforeUnmount } from 'vue'
 import { gsap } from 'boot/gsap'
+import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 
-const drawerOpen = ref(false)
+const mobileMenuOpen = ref(false)
+const mobileMenuNav = ref(null)
+const prefersReducedMotion = usePrefersReducedMotion()
 
 const navLinks = [
   { to: '/sessions/about', label: 'About' },
@@ -90,6 +95,37 @@ function underline (e) {
 function unUnderline (e) {
   const el = e.currentTarget.querySelector('.sessions-nav__underline')
   gsap.to(el, { scaleX: 0, duration: 0.2, ease: 'power2.in' })
+}
+
+// Full-screen takeover, not a side drawer, so scrolling the page behind it
+// while it's open would be a jarring mismatch (menu stays fixed, content
+// silently scrolls underneath the blur). Locked for as long as it's open.
+watch(mobileMenuOpen, (open) => {
+  document.body.style.overflow = open ? 'hidden' : ''
+})
+onBeforeUnmount(() => { document.body.style.overflow = '' })
+
+function onMenuEnter (el, done) {
+  const links = mobileMenuNav.value.querySelectorAll('.mobile-menu__link')
+  if (prefersReducedMotion.value) {
+    gsap.set(el, { autoAlpha: 1 })
+    gsap.set(links, { autoAlpha: 1, y: 0 })
+    done()
+    return
+  }
+  gsap.set(links, { autoAlpha: 0, y: 14 })
+  gsap.timeline({ onComplete: done })
+    .fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25, ease: 'power1.out' })
+    .to(links, { autoAlpha: 1, y: 0, duration: 0.35, stagger: 0.06, ease: 'power2.out' }, '-=0.1')
+}
+
+function onMenuLeave (el, done) {
+  if (prefersReducedMotion.value) {
+    gsap.set(el, { autoAlpha: 0 })
+    done()
+    return
+  }
+  gsap.to(el, { autoAlpha: 0, duration: 0.2, ease: 'power1.in', onComplete: done })
 }
 </script>
 
@@ -143,6 +179,39 @@ function unUnderline (e) {
   background: var(--coral);
   transform: scaleX(0);
   transform-origin: left;
+}
+
+.mobile-menu {
+  position: fixed;
+  // Quasar's q-header sits at z-index: 2000. This has to stay below that,
+  // not above it, otherwise it covers the header entirely, including the
+  // close button the menu toggle turns into, no way to dismiss it.
+  inset: 0;
+  z-index: 1900;
+  background: rgba(30, 43, 60, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.mobile-menu__link {
+  color: var(--paper);
+  text-decoration: none;
+  font-size: clamp(1.5rem, 7vw, 2rem);
+  letter-spacing: 0.01em;
+
+  &:active {
+    color: var(--coral);
+  }
 }
 
 .sessions-footer {
