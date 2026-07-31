@@ -133,6 +133,8 @@ onMounted(() => {
     padding: 1rem 1.1rem;
     border-radius: 6px;
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 480px;
     margin: 0 0 1.25rem;
 
     code {
