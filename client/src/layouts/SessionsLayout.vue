@@ -153,7 +153,7 @@ function onMenuLeave (el, done) {
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
-  padding: 0.75rem 1.5rem;
+  padding: 0 1.5rem;
 }
 
 .sessions-wordmark {
