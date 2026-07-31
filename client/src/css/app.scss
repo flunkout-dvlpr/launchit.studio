@@ -18,6 +18,17 @@ html, body {
   color: var(--navy);
 }
 
+// Retro pixel-art arrow, on every element, not just the page's default
+// state, otherwise links/buttons fall back to the browser's normal pointer
+// the instant you hover them, breaking the effect exactly where people
+// click most. Hand-built as a 12x19 bitmap of SVG rects (see
+// public/cursors/arrow.svg), no photo/image asset. Hotspot 0 0 puts the
+// click point at the arrow's tip, matching where it sits in the bitmap.
+// `auto` fallback for anything that can't load the SVG.
+* {
+  cursor: url('/cursors/arrow.svg') 0 0, auto !important;
+}
+
 // Scrollbars hidden site-wide, on every element, not just the page itself.
 // Scrolling still works everywhere, this only hides the visible bar.
 *, html, body {
