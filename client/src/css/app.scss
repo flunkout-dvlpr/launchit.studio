@@ -29,6 +29,18 @@ html, body {
   cursor: url('/cursors/arrow.svg') 0 0, auto !important;
 }
 
+// Retro pixel-art pointing hand, same technique (see public/cursors/
+// pointer.svg), wherever the browser would normally switch to its own
+// pointer cursor: links, buttons, and anything else clickable. Needs
+// !important too, `a`/`button` are more specific than the `*` rule above,
+// but !important rules only compete with other !important rules, a normal-
+// specificity win here wouldn't be enough to beat the arrow rule's
+// !important. Hotspot 6 0 sits at the fingertip.
+a, button, [role='button'], label, .q-btn, select,
+input[type='checkbox'], input[type='radio'] {
+  cursor: url('/cursors/pointer.svg') 6 0, pointer !important;
+}
+
 // Scrollbars hidden site-wide, on every element, not just the page itself.
 // Scrolling still works everywhere, this only hides the visible bar.
 *, html, body {
