@@ -137,12 +137,6 @@ onMounted(() => {
     margin: 0 0 1.25rem;
     white-space: pre-wrap;
     word-break: break-word;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
 
     code {
       background: none;

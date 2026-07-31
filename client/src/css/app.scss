@@ -18,6 +18,17 @@ html, body {
   color: var(--navy);
 }
 
+// Scrollbars hidden site-wide, on every element, not just the page itself.
+// Scrolling still works everywhere, this only hides the visible bar.
+*, html, body {
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // legacy Edge/IE
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome/Safari/new Edge
+  }
+}
+
 body {
   font-family: var(--font-label);
 }
