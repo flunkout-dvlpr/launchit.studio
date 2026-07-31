@@ -54,6 +54,7 @@ body {
   border-radius: 999px;
   transform: rotate(var(--pill-tilt));
   white-space: nowrap;
+  user-select: none;
 
   &--coral { background: var(--coral); color: var(--paper); }
   &--gold { background: var(--gold); color: var(--navy); }
