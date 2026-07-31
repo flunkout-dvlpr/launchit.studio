@@ -2,7 +2,7 @@
   <q-layout view="hHh lpr fFf" class="sessions-layout">
     <q-header class="sessions-header">
       <q-toolbar class="sessions-toolbar">
-        <router-link to="/sessions" class="sessions-wordmark font-label">
+        <router-link ref="wordmarkEl" to="/sessions" class="sessions-wordmark font-label">
           <LogoMark :variant="logoVariant" :size="75" class="sessions-wordmark__mark" />
           LAUNCHIT <span class="text-weight-bold">SESSIONS</span>
         </router-link>
@@ -74,19 +74,29 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 import LogoMark from 'components/LogoMark.vue'
 
 const mobileMenuOpen = ref(false)
 const mobileMenuNav = ref(null)
+const wordmarkEl = ref(null)
 const prefersReducedMotion = usePrefersReducedMotion()
 
 // Informal A/B: picked once per full page load (this layout persists across
 // client-side route changes within /sessions, so it won't flicker between
 // the two while navigating, only a hard refresh re-rolls it).
 const logoVariant = Math.random() < 0.5 ? 'L' : 'rocket'
+
+onMounted(() => {
+  // router-link is a component, not a plain element — .$el is the actual
+  // rendered <a> tag GSAP needs to animate.
+  const el = wordmarkEl.value?.$el
+  if (!el) return
+  if (prefersReducedMotion.value) return
+  gsap.from(el, { x: -40, autoAlpha: 0, duration: 0.6, ease: 'power3.out' })
+})
 
 const navLinks = [
   { to: '/sessions/about', label: 'About' },
