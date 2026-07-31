@@ -21,7 +21,7 @@ html, body {
 // Retro pixel-art arrow, on every element, not just the page's default
 // state, otherwise links/buttons fall back to the browser's normal pointer
 // the instant you hover them, breaking the effect exactly where people
-// click most. Hand-built as a 12x19 bitmap of SVG rects (see
+// click most. Hand-built as a 12x19 bitmap of SVG rects at 3px/cell (see
 // public/cursors/arrow.svg), no photo/image asset. Hotspot 0 0 puts the
 // click point at the arrow's tip, matching where it sits in the bitmap.
 // `auto` fallback for anything that can't load the SVG.
@@ -35,10 +35,14 @@ html, body {
 // !important too, `a`/`button` are more specific than the `*` rule above,
 // but !important rules only compete with other !important rules, a normal-
 // specificity win here wouldn't be enough to beat the arrow rule's
-// !important. Hotspot 6 0 sits at the fingertip.
+// !important. Fingertip is tapered to a true single pixel (was a flat
+// 3-wide cap) so the hotspot, 10 0, lands on something visually obvious
+// instead of being buried in an ambiguous wide area, that's what made it
+// feel like the trigger area had shrunk, the visible "point" of the icon
+// didn't match where clicks actually registered.
 a, button, [role='button'], label, .q-btn, select,
 input[type='checkbox'], input[type='radio'] {
-  cursor: url('/cursors/pointer.svg') 6 0, pointer !important;
+  cursor: url('/cursors/pointer.svg') 10 0, pointer !important;
 }
 
 // Scrollbars hidden site-wide, on every element, not just the page itself.
