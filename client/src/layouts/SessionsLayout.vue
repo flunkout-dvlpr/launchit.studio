@@ -196,16 +196,22 @@ function onLogoClick (e) {
 
   const vw = window.innerWidth
   const vh = window.innerHeight
-  // Waypoints as viewport percentages, converted below into an x/y offset
-  // from the clone's own fixed starting position, since it's pinned via
-  // position:fixed, a GSAP x/y translate on top of that is what actually
-  // moves it around the screen.
-  const waypoints = [
-    { xPct: 0.18, yPct: 0.22, rotation: 120 },
-    { xPct: 0.82, yPct: 0.16, rotation: 250 },
-    { xPct: 0.78, yPct: 0.7, rotation: 20 },
-    { xPct: 0.22, yPct: 0.72, rotation: -140 },
-    { home: true, rotation: 0 }
+  // Points as viewport percentages, converted into an x/y offset from the
+  // clone's own fixed starting position (it's pinned via position:fixed,
+  // so a GSAP translate on top of that is what moves it around the
+  // screen). Chaining separate .to() hops between fixed points, the
+  // original approach, produces sharp direction changes at every point,
+  // reads as "snapping to corners" rather than gliding. MotionPathPlugin
+  // instead threads one continuous spline through all of them, with
+  // autoRotate banking the rocket to face the direction of travel, the
+  // actual paper-airplane feel comes from that being a single curve, not
+  // discrete hops.
+  const path = [
+    { x: (vw * 0.15) - rect.left, y: (vh * 0.15) - rect.top },
+    { x: (vw * 0.85) - rect.left, y: (vh * 0.25) - rect.top },
+    { x: (vw * 0.6) - rect.left, y: (vh * 0.78) - rect.top },
+    { x: (vw * 0.2) - rect.left, y: (vh * 0.6) - rect.top },
+    { x: 0, y: 0 } // back to its own exact starting position
   ]
 
   const tl = gsap.timeline({
@@ -216,18 +222,25 @@ function onLogoClick (e) {
     }
   })
 
-  waypoints.forEach((point) => {
-    const targetX = point.home ? 0 : (vw * point.xPct) - rect.left
-    const targetY = point.home ? 0 : (vh * point.yPct) - rect.top
-    tl.to(clone, {
-      x: targetX,
-      y: targetY,
-      rotation: point.rotation,
-      scale: point.home ? 1 : 1.3,
-      duration: point.home ? 0.5 : 0.45,
-      ease: point.home ? 'back.out(1.7)' : 'power1.inOut'
-    })
-  })
+  tl.to(clone, {
+    motionPath: { path, curviness: 1.35, autoRotate: true },
+    duration: 2.6,
+    ease: 'sine.inOut'
+  }, 0)
+  // Gentle scale pulse in parallel with the flight, independent of the
+  // position/rotation curve above, GSAP composes transforms from
+  // separate tweens on the same element fine.
+  tl.to(clone, {
+    scale: 1.3,
+    duration: 1.3,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: 1
+  }, 0)
+  // autoRotate's final angle is whatever the path's tangent happens to be
+  // at the last point, not necessarily 0, but the static header rocket
+  // it swaps back to has no extra rotation. Quick settle to match.
+  tl.to(clone, { rotation: 0, duration: 0.25, ease: 'power2.out' })
 }
 </script>
 
