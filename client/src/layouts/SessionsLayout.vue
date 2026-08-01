@@ -2,8 +2,13 @@
   <q-layout view="hHh lpr fFf" class="sessions-layout">
     <q-header class="sessions-header">
       <q-toolbar class="sessions-toolbar">
-        <router-link ref="wordmarkEl" to="/sessions" class="sessions-wordmark font-label">
-          <LogoMark :variant="logoVariant" :size="75" class="sessions-wordmark__mark" />
+        <router-link
+          ref="wordmarkEl"
+          to="/sessions"
+          class="sessions-wordmark font-label"
+          @click="onLogoClick"
+        >
+          <LogoMark ref="logoMarkEl" :size="75" class="sessions-wordmark__mark" />
           LAUNCHIT <span class="text-weight-bold">SESSIONS</span>
         </router-link>
 
@@ -75,20 +80,18 @@
 
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 import LogoMark from 'components/LogoMark.vue'
 
+const router = useRouter()
 const mobileMenuOpen = ref(false)
 const mobileMenuNav = ref(null)
 const wordmarkEl = ref(null)
 const navEl = ref(null)
+const logoMarkEl = ref(null)
 const prefersReducedMotion = usePrefersReducedMotion()
-
-// Informal A/B: picked once per full page load (this layout persists across
-// client-side route changes within /sessions, so it won't flicker between
-// the two while navigating, only a hard refresh re-rolls it).
-const logoVariant = Math.random() < 0.5 ? 'L' : 'rocket'
 
 onMounted(() => {
   if (prefersReducedMotion.value) return
@@ -151,6 +154,80 @@ function onMenuLeave (el, done) {
     return
   }
   gsap.to(el, { autoAlpha: 0, duration: 0.2, ease: 'power1.in', onComplete: done })
+}
+
+// The grid stays put, the rocket flies around the viewport and lands back
+// in its exact starting spot before actually navigating. The rocket lives
+// inside a small, tightly-cropped SVG in the header, too small to animate
+// within directly (it'd just clip at the SVG's own edges). Instead: clone
+// the rocket's <svg>, pin the clone at the original's exact screen
+// position (position: fixed, so the swap is invisible), hide the real one,
+// fly the clone around, then land it back at an x/y offset of exactly 0,0
+// (its own starting position) before cleaning up and navigating.
+function onLogoClick (e) {
+  const rocketEl = logoMarkEl.value?.rocketSvgEl
+  if (!rocketEl) return // no rocket found, just let the link navigate normally
+
+  e.preventDefault()
+
+  function goHome () {
+    if (router.currentRoute.value.path !== '/sessions') router.push('/sessions')
+  }
+
+  if (prefersReducedMotion.value) {
+    goHome()
+    return
+  }
+
+  const rect = rocketEl.getBoundingClientRect()
+  const clone = rocketEl.cloneNode(true)
+  Object.assign(clone.style, {
+    position: 'fixed',
+    top: `${rect.top}px`,
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    margin: '0',
+    zIndex: 4000,
+    pointerEvents: 'none'
+  })
+  document.body.appendChild(clone)
+  rocketEl.style.visibility = 'hidden'
+
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  // Waypoints as viewport percentages, converted below into an x/y offset
+  // from the clone's own fixed starting position, since it's pinned via
+  // position:fixed, a GSAP x/y translate on top of that is what actually
+  // moves it around the screen.
+  const waypoints = [
+    { xPct: 0.18, yPct: 0.22, rotation: 120 },
+    { xPct: 0.82, yPct: 0.16, rotation: 250 },
+    { xPct: 0.78, yPct: 0.7, rotation: 20 },
+    { xPct: 0.22, yPct: 0.72, rotation: -140 },
+    { home: true, rotation: 0 }
+  ]
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      document.body.removeChild(clone)
+      rocketEl.style.visibility = ''
+      goHome()
+    }
+  })
+
+  waypoints.forEach((point) => {
+    const targetX = point.home ? 0 : (vw * point.xPct) - rect.left
+    const targetY = point.home ? 0 : (vh * point.yPct) - rect.top
+    tl.to(clone, {
+      x: targetX,
+      y: targetY,
+      rotation: point.rotation,
+      scale: point.home ? 1 : 1.3,
+      duration: point.home ? 0.5 : 0.45,
+      ease: point.home ? 'back.out(1.7)' : 'power1.inOut'
+    })
+  })
 }
 </script>
 
