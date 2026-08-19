@@ -152,6 +152,23 @@ function unUnderline(e) {
   gsap.to(el, { scaleX: 0, duration: 0.2, ease: "power2.in" });
 }
 
+// This nav lives in the layout, not the page, so it never unmounts between
+// /sessions/* navigations — only router-view swaps. The underline is pure
+// mouseenter/mouseleave with no route awareness, so clicking a link (cursor
+// stays put on that same, still-mounted element) navigates without ever
+// firing mouseleave, leaving that link's underline stuck "on" until the
+// mouse happens to move off it later — the "sometimes stays underlined"
+// bug. Reset on every route change as a safety net, independent of
+// whatever hover state did or didn't fire.
+watch(
+  () => router.currentRoute.value.path,
+  () => {
+    if (!navEl.value) return;
+    const underlines = navEl.value.querySelectorAll(".sessions-nav__underline");
+    gsap.set(underlines, { scaleX: 0 });
+  }
+);
+
 // Full-screen takeover, not a side drawer, so scrolling the page behind it
 // while it's open would be a jarring mismatch (menu stays fixed, content
 // silently scrolls underneath the blur). Locked for as long as it's open.
