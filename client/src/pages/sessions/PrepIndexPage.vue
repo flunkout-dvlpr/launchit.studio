@@ -25,6 +25,18 @@
           <p class="font-label prep-card__business">{{ artifact.meta.type === 'demo' ? artifact.meta.series : artifact.meta.business }}</p>
           <span class="font-label prep-card__cta">Read the guide →</span>
         </router-link>
+        <!-- Sibling, not nested inside the router-link above — an <a> can't
+             contain another interactive element, and this needs its own
+             click target separate from "read the guide." -->
+        <a
+          v-if="artifact.meta.liveUrl"
+          :href="artifact.meta.liveUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="prep-card__live-link font-label"
+        >
+          Visit the live site ↗
+        </a>
       </li>
     </ul>
   </q-page>
@@ -88,10 +100,11 @@ onMounted(() => {
   gap: 1.25rem;
 }
 
-.prep-card__link {
-  display: block;
-  text-decoration: none;
-  color: var(--navy);
+// The visual "card" box moved here (off .prep-card__link) once a second,
+// sibling link was added below it — an <a> can't contain another <a>, so
+// the router-link and the live-site link both needed to sit inside a
+// plain container instead of one of them owning the whole card's chrome.
+.prep-card {
   background: rgba(244, 240, 230, 0.5);
   border: 1px solid rgba(62, 124, 166, 0.3);
   border-radius: 8px;
@@ -101,6 +114,26 @@ onMounted(() => {
   &:hover {
     border-color: var(--coral);
     transform: translateY(-2px);
+  }
+}
+
+.prep-card__link {
+  display: block;
+  text-decoration: none;
+  color: var(--navy);
+}
+
+.prep-card__live-link {
+  display: inline-block;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(62, 124, 166, 0.25);
+  font-size: 0.85rem;
+  color: var(--coral);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
