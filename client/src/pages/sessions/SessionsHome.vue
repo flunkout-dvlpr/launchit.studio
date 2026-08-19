@@ -32,7 +32,7 @@
       </template>
 
       <div class="hero__inner">
-        <span class="pill-tag pill-tag--gold tilt-right">HOUSTON · IMPACT HUB</span>
+        <span class="pill-tag pill-tag--gold tilt-right">IMPACT HUB · HOUSTON</span>
         <h1 ref="headline" class="font-display hero__title">
           Real Houston ideas.<br />Built live with Claude.
         </h1>
