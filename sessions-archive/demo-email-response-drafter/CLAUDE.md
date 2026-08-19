@@ -1,10 +1,22 @@
 # Project: Email Response Drafter
 
 ## What this project does
-Connects to your own Gmail inbox (read-only, plus optional draft-creation),
-pulls your most recent emails, filters for the ones matching keywords you
-care about, and drafts a reply for each one in your own voice, saved locally
-so you can review everything before anything goes near "send."
+Connects to your own Gmail inbox (read-only, plus optional draft-creation)
+and turns scattered signal buried in it into things worth actually looking
+at. Two capabilities so far, both read-only against Gmail, both save output
+locally for you to review:
+
+1. **Reply drafter** — pulls recent emails, filters for ones matching
+   keywords you care about, and drafts a reply for each in your own voice.
+2. **Price-cut listing tracker** — pulls Zillow price-cut alert emails
+   (which otherwise show up as one scattered email per listing) and turns
+   them into a single ranked table, filtered against your own criteria and
+   graded against a rubric before it's shown to you.
+
+Both follow the same shape: a script turns raw email into structured local
+JSON with no judgment calls baked in, then a locked drafting instruction
+has Claude Code read that JSON plus a handful of plain-language config
+files and produce the actual writeup.
 
 ## Why this exists
 Built as a Launchit Sessions prep-artifact demo: a small, real project you
@@ -66,9 +78,18 @@ exactly what to click next.
 - `keywords.md` — a plain list of words or phrases to filter emails by, one
   per line (e.g. "refund", "cancel", "when will my order"). Prefer specific
   multi-word phrases over single common words, see the false-positive note
-  under Conventions.
-- `voice.md` — 3 to 5 examples of replies you've actually written before, so
-  drafts sound like you instead of a generic bot
+  under Conventions. Used by the reply drafter only.
+- `brand-voice.md` — examples of your actual writing, shared across every
+  drafted output this project produces (not just replies), so drafts sound
+  like you instead of a generic bot. Has separate sections for different
+  drafting contexts since the right tone isn't the same for every one, see
+  its own contents.
+- `policy.md` — hard eligibility rules for the price-cut tracker: what
+  price range, location, and other criteria a listing has to clear before
+  it's worth a table row. A filter, not a ranking.
+- `rubric.md` — a grading checklist applied to a writeup before it's shown,
+  factual accuracy, no invented numbers, format requirements. Applies to
+  both drafting flows.
 - `settings.md` — plain `key: value` lines controlling behavior without
   touching code: `emails_to_check` (how many recent emails to scan, default
   25) and `skip_bulk_mail` (on by default, see Conventions). Missing file or
@@ -81,15 +102,30 @@ exactly what to click next.
   run only, e.g. `node scripts/fetch-emails.js 100`), skips bulk/newsletter
   mail unless turned off, extracts clean plain-text bodies, and saves the
   ones matching `keywords.md` to `data/matches.json`
+- `scripts/track-price-cuts.js` — searches Gmail directly (not a recent-N
+  scan-and-filter, an actual `from:zillow subject:"price cut"` query) for
+  the most recent matching alerts and extracts each into structured JSON
+  (`data/price-cuts.json`): address, price, cut amount, cut date,
+  beds/baths/sqft, a clean listing link. Skips (and logs) anything it can't
+  confidently parse rather than guessing. Default is the 50 most recent
+  matches; `node scripts/track-price-cuts.js 100` overrides that count for
+  one run.
+- `scripts/scan-inbox.js` — general-purpose exploration tool, pulls
+  sender/subject (no bodies) for the last N inbox messages and a by-domain
+  frequency count, saved to `data/inbox-scan.json`. This is how the
+  price-cut use case itself got found, useful again any time you want to
+  find the next pattern worth building around.
 - `output/drafts.md` — one draft reply per matched email, written here for
   you to review. Nothing is sent, and nothing touches Gmail automatically.
+- `output/price-cuts.md` — the price-cut listing table, written here for
+  you to review.
 
 ## Gmail API scopes to request
 Start with `gmail.readonly` and, only if you want the stretch goal below,
 `gmail.compose`. Do not request `gmail.send` — this project drafts, it
 never sends on its own.
 
-## The drafting instruction
+## The reply-drafting instruction
 There's no script for this part, and deliberately so, no second AI API key
 to manage, Claude Code reads `data/matches.json` directly and writes
 `output/drafts.md` itself when asked. But "ask it to draft replies" isn't
@@ -104,18 +140,44 @@ the Meditations demo series uses:
 > already reads as resolved (someone already confirmed, thanked, or closed
 > the loop, check other matched entries from the same thread/subject line
 > too, not just this one in isolation). Otherwise, write a reply in the
-> voice shown by the examples in `voice.md`: warm but not gushing, direct,
-> 2-4 sentences, acknowledge specifically what they asked, and give a real
-> answer or a clear next step rather than a generic acknowledgment. No
-> corporate hedging, no "we value your business" filler. Write every
-> result to `output/drafts.md`, one entry per matched email, each under a
-> heading with the sender and subject line it's replying to.
+> voice shown by the "Reply voice" examples in `brand-voice.md`: warm but
+> not gushing, direct, 2-4 sentences, acknowledge specifically what they
+> asked, and give a real answer or a clear next step rather than a generic
+> acknowledgment. No corporate hedging, no "we value your business" filler.
+> Write every result to `output/drafts.md`, one entry per matched email,
+> each under a heading with the sender and subject line it's replying to.
 
 If drafts consistently come out too stiff, too casual, too long, or
 whatever else feels off, don't ask for a one-off fix on a single draft,
-add or swap examples in `voice.md` instead, or tighten the instruction
-above, and redraft everything. The goal is one consistent voice across all
-drafts, not each draft individually adjusted by hand.
+add or swap examples in `brand-voice.md` instead, or tighten the
+instruction above, and redraft everything. The goal is one consistent
+voice across all drafts, not each draft individually adjusted by hand.
+
+## The price-cut writeup instruction
+Same shape as the reply-drafting instruction above: `scripts/track-price-cuts.js`
+does the deterministic extraction, Claude Code does the judgment calls,
+reading `data/price-cuts.json` plus `policy.md`, `rubric.md`, and
+`brand-voice.md` directly rather than re-deriving the rules from memory.
+Use this exact instruction:
+
+> Read every entry in `data/price-cuts.json`. Drop any listing that fails
+> `policy.md` (currently just the price ceiling), but count how many were
+> dropped and why, don't just silently discard them. For everything that
+> clears policy, compute percent price cut (cut amount
+> ÷ current price), and build a markdown table sorted by percent cut,
+> largest first, with columns: address, price, cut ($ and %), cut date,
+> beds/baths/sqft, link. Open with a one-line upbeat summary in the voice
+> shown under "Writeup voice" in `brand-voice.md` (friendly, a little
+> jumpy, this is for you only, nobody else ever reads it), then the table,
+> then a line noting how many listings were excluded by policy. Before
+> writing the final version, check the whole thing against every item in
+> `rubric.md`, fix anything that fails rather than shipping it anyway.
+> Write the result to `output/price-cuts.md`.
+
+If the table starts feeling off, wrong things surfaced, tone doesn't land,
+budget ceiling too strict or too loose, the fix is the same pattern as
+above: edit `policy.md`, `rubric.md`, or `brand-voice.md` and regenerate
+the whole table, not a manual patch to one row.
 
 ## Conventions
 - Never commit `credentials.json`, `token.json`, `data/`, or `output/`.
@@ -198,24 +260,43 @@ drafts, not each draft individually adjusted by hand.
 Everything above only happens once: the Google Cloud setup, and running
 `scripts/auth.js`. Using this day to day afterward is just:
 
+**Reply drafter:**
 1. Open this folder in Claude Code.
-2. Ask it to run `scripts/fetch-emails.js`, then point it at the drafting
-   instruction above and ask it to follow that. Reusing the same wording
-   every time is what keeps drafts consistent, don't paraphrase it from
-   memory.
+2. Ask it to run `scripts/fetch-emails.js`, then point it at the
+   reply-drafting instruction above and ask it to follow that. Reusing the
+   same wording every time is what keeps drafts consistent, don't
+   paraphrase it from memory.
 3. Open `output/drafts.md`, read the drafts, copy whatever's good into a
    real reply. Nothing here sends anything on its own, ever.
+
+**Price-cut tracker:**
+1. Ask Claude Code to run `scripts/track-price-cuts.js`, then point it at
+   the price-cut writeup instruction above.
+2. Open `output/price-cuts.md`.
+
+Note on token expiry: if either script fails with `invalid_grant`, the
+saved token expired, this happens roughly every 7 days of inactivity since
+the OAuth consent screen intentionally stays in Google's unverified
+"Testing" mode (see "If something breaks" below). Delete `token.json` and
+run `scripts/auth.js` again.
 
 ### The knobs you can turn, no code required
 - **`keywords.md`** — this is the actual list of what counts as "worth a
   reply." Add a line to catch something new, delete a line to stop
   catching something, edit a line to be more specific. If you're getting
   irrelevant matches, prefer specific phrases ("when will my order ship")
-  over single common words ("order").
-- **`voice.md`** — this is what teaches drafts your tone. If a draft feels
-  off, swap in different or additional real examples of replies you've
-  actually sent, rather than trying to describe your tone in the abstract,
-  showing works better than telling.
+  over single common words ("order"). Reply drafter only.
+- **`brand-voice.md`** — this is what teaches drafts your tone, one section
+  per drafting context (reply voice vs. price-cut writeup voice, they're
+  deliberately different). If a draft feels off, swap in different or
+  additional real examples, rather than trying to describe your tone in
+  the abstract, showing works better than telling.
+- **`policy.md`** — price-cut tracker only. Hard eligibility rules: price
+  ceiling, location, whatever else should gate a listing out entirely
+  before it reaches the table.
+- **`rubric.md`** — the quality checklist a writeup gets graded against
+  before it's shown. Add a line if you notice a recurring problem you want
+  caught automatically next time, rather than fixing it by hand each time.
 - **`settings.md`** — two more dials, both plain `key: value` lines:
   - `emails_to_check` — how many recent emails to scan each run (default
     25). Change the number and save, no need to remember a command-line
