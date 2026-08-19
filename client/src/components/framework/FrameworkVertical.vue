@@ -71,6 +71,15 @@ function positionTrackHorizontal () {
 }
 
 onMounted(() => {
+  // The router's own scrollBehavior (reset to top on every navigation)
+  // applies on the same tick as — and can race — this onMounted. Landing
+  // here from a page scrolled deep down means every scrollTrigger below,
+  // including the scrub-tied progress bar, would measure against that
+  // stale position and read as already-progressed/already-fired before the
+  // router's reset actually lands. Forcing it here removes the race
+  // instead of hoping the router wins it first.
+  window.scrollTo(0, 0)
+
   // The entrance-animation feel depends on node size, which shrinks on
   // mobile (see the media query below). Read once on mount rather than
   // reacting live to resize, orientation changes mid-scroll aren't worth
