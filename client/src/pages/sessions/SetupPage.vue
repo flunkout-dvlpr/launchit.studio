@@ -13,6 +13,26 @@
       </header>
 
       <section class="reveal">
+        <h2 class="font-label setup-page__label">Before you clone anything</h2>
+        <p class="font-label setup-page__body">
+          Every project starts as a "repository" (repo for short) sitting on
+          GitHub &mdash; think of it as the project's actual folder, plus its
+          full history of changes. "Cloning" just means downloading your own
+          copy of that folder onto your machine so you can open and run it.
+          You don't need to understand how any of the history tracking
+          works under the hood to do this, one command is enough to get a
+          working copy on your computer.
+        </p>
+        <div class="setup-page__links">
+          <a class="setup-page__link font-label" href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository" target="_blank" rel="noopener">
+            How to clone a repo ↗
+          </a>
+        </div>
+      </section>
+
+      <div class="dimension-line" />
+
+      <section class="reveal">
         <h2 class="font-label setup-page__label">Claude Code + VS Code</h2>
         <p class="font-label setup-page__body">
           For most of what happens during a session, our day-to-day setup is
@@ -46,6 +66,22 @@
           re-explaining the same background every time you start a new chat.
           It's the closest thing our setup has to a "settings file" for how
           Claude should treat a given project.
+        </p>
+      </section>
+
+      <div class="dimension-line" />
+
+      <section class="reveal">
+        <h2 class="font-label setup-page__label">Stuck getting set up?</h2>
+        <p class="font-label setup-page__body">
+          Office hours run every other Friday (paused the week of a session
+          itself), right around Cup of Joeys at The Ion &mdash; if you're
+          already making the trip for that, this is an easy pit stop right
+          after. Bring your laptop, we'll get you from a blank machine to a
+          cloned project running locally.
+          <!-- TODO: exact time still pending, tied to Cup of Joeys' own
+               schedule — once that's locked in, land the specific time here.
+               Also still need: how to join/where exactly at The Ion. -->
         </p>
       </section>
 

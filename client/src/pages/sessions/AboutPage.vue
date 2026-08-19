@@ -40,6 +40,20 @@
       <div class="dimension-line" />
 
       <section class="reveal">
+        <h2 class="font-label about-page__label">How we build</h2>
+        <p class="font-label about-page__body">
+          We use Claude to build, but what comes out the other end doesn't
+          need Claude to keep running. No chatbot bolted onto your site, no
+          "agent" quietly racking up API calls every time someone uses what
+          you built. Just a real, standalone tool, site, or script that's
+          yours, works on its own, and keeps working exactly the same way a
+          year from now.
+        </p>
+      </section>
+
+      <div class="dimension-line" />
+
+      <section class="reveal">
         <h2 class="font-label about-page__label">Who it's for</h2>
         <p class="font-label about-page__body">
           Small business owners, entrepreneurs, and everyday builders,
