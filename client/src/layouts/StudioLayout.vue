@@ -14,7 +14,7 @@
             Sessions
             <span class="studio-nav__underline" />
           </router-link>
-          <a href="mailto:info@launchit.studio" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
+          <a href="mailto:hello@launchit.studio" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
             Contact
             <span class="studio-nav__underline" />
           </a>
@@ -31,7 +31,7 @@
         <span class="pill-tag pill-tag--outline tilt-left">HOUSTON</span>
         <p class="studio-footer__text">
           Launchit Studio — design and development.
-          <a href="mailto:info@launchit.studio">info@launchit.studio</a>
+          <a href="mailto:hello@launchit.studio">hello@launchit.studio</a>
         </p>
       </div>
     </footer>

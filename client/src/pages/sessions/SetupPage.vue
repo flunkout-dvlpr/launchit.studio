@@ -74,14 +74,12 @@
       <section class="reveal">
         <h2 class="font-label setup-page__label">Stuck getting set up?</h2>
         <p class="font-label setup-page__body">
-          Office hours run every other Friday (paused the week of a session
-          itself), right around Cup of Joeys at The Ion &mdash; if you're
-          already making the trip for that, this is an easy pit stop right
-          after. Bring your laptop, we'll get you from a blank machine to a
-          cloned project running locally.
-          <!-- TODO: exact time still pending, tied to Cup of Joeys' own
-               schedule — once that's locked in, land the specific time here.
-               Also still need: how to join/where exactly at The Ion. -->
+          Office hours run every other Friday at 12pm (paused the week of a
+          session itself), right around Cup of Joeys at The Ion &mdash; if
+          you're already making the trip for that, this is an easy pit stop
+          right after. Bring your laptop, we'll get you from a blank machine
+          to a cloned project running locally.
+          <!-- TODO: still need exactly where at The Ion / how to join. -->
         </p>
       </section>
 
