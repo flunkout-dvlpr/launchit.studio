@@ -17,6 +17,7 @@
           :target="item.link ? '_blank' : undefined"
           :rel="item.link ? 'noopener' : undefined"
           class="work-card"
+          @click="item.link && trackEvent('outbound_click', { label: item.title, url: item.link })"
         >
           <h2 class="font-display work-card__title">{{ item.title }}</h2>
           <p class="font-label work-card__description">{{ item.description }}</p>
@@ -31,6 +32,7 @@
 import { ref, onMounted } from 'vue'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
+import { trackEvent } from 'boot/analytics'
 import work from 'src/data/work.js'
 
 const gridSection = ref(null)

@@ -14,7 +14,7 @@
             Sessions
             <span class="studio-nav__underline" />
           </router-link>
-          <a href="mailto:hello@launchit.studio" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
+          <a href="mailto:hello@launchit.studio" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline" @click="trackEvent('contact_click', { location: 'nav' })">
             Contact
             <span class="studio-nav__underline" />
           </a>
@@ -31,7 +31,7 @@
         <span class="pill-tag pill-tag--outline tilt-left">HOUSTON</span>
         <p class="studio-footer__text">
           Launchit Studio — design and development.
-          <a href="mailto:hello@launchit.studio">hello@launchit.studio</a>
+          <a href="mailto:hello@launchit.studio" @click="trackEvent('contact_click', { location: 'footer' })">hello@launchit.studio</a>
         </p>
       </div>
     </footer>
@@ -43,6 +43,7 @@ import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
+import { trackEvent } from 'boot/analytics'
 import LogoMark from 'components/LogoMark.vue'
 
 const $q = useQuasar()

@@ -90,6 +90,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { gsap, ScrollTrigger } from 'boot/gsap'
+import { trackEvent } from 'boot/analytics'
 
 const root = ref(null)
 const submitted = ref(false)
@@ -150,6 +151,7 @@ function handleSubmit () {
   const mailto = `mailto:hello@launchit.studio?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`
   window.location.href = mailto
   submitted.value = true
+  trackEvent('submit_use_case')
 }
 
 onMounted(() => {

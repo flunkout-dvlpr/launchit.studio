@@ -34,6 +34,7 @@ module.exports = configure(function (/* ctx */) {
       'axios',
       'fonts',
       'gsap',
+      'analytics',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

@@ -34,6 +34,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="prep-card__live-link font-label"
+          @click="trackEvent('outbound_click', { label: artifact.meta.title, url: artifact.meta.liveUrl })"
         >
           Visit the live site ↗
         </a>
@@ -46,6 +47,7 @@
 import { ref, onMounted } from 'vue'
 import { gsap, ScrollTrigger } from 'boot/gsap'
 import { getAllPrepArtifacts } from 'src/utils/prepArtifacts'
+import { trackEvent } from 'boot/analytics'
 
 const artifacts = getAllPrepArtifacts()
 const listEl = ref(null)
