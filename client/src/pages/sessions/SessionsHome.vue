@@ -43,8 +43,8 @@
           in the open.
         </p>
         <div class="hero__ctas">
-          <q-btn to="/sessions/about" unelevated no-caps label="Why this exists" class="hero__cta-primary font-label" />
-          <q-btn to="/sessions/framework" outline no-caps label="See the framework" class="hero__cta-secondary font-label" />
+          <q-btn to="/sessions/about" unelevated no-caps label="Why this exists" class="hero__cta-primary font-label" @click="trackEvent('cta_click', { label: 'hero-why-this-exists' })" />
+          <q-btn to="/sessions/framework" outline no-caps label="See the framework" class="hero__cta-secondary font-label" @click="trackEvent('cta_click', { label: 'hero-see-the-framework' })" />
         </div>
       </div>
     </section>
@@ -66,6 +66,7 @@
             label="Read the prep guide"
             icon-right="arrow_forward"
             class="hero__cta-primary font-label"
+            @click="trackEvent('cta_click', { label: 'current-cycle-read-prep-guide' })"
           />
         </div>
         <div v-else class="current-cycle__card">
@@ -81,6 +82,7 @@
             label="Submit a use case"
             icon-right="arrow_forward"
             class="hero__cta-primary font-label"
+            @click="trackEvent('cta_click', { label: 'current-cycle-submit-a-use-case' })"
           />
         </div>
       </div>
@@ -95,7 +97,7 @@
             <p class="font-label step__text">{{ step.text }}</p>
           </div>
         </div>
-        <q-btn to="/sessions/framework" flat no-caps label="Full framework →" class="font-label how-it-works__link" />
+        <q-btn to="/sessions/framework" flat no-caps label="Full framework →" class="font-label how-it-works__link" @click="trackEvent('cta_click', { label: 'how-it-works-full-framework' })" />
       </div>
     </section>
   </q-page>
@@ -105,6 +107,7 @@
 import { ref, onMounted } from 'vue'
 import { gsap, ScrollTrigger, SplitText } from 'boot/gsap'
 import { getCurrentCycle } from 'src/utils/prepArtifacts'
+import { trackEvent } from 'boot/analytics'
 import CollageClipping from 'components/CollageClipping.vue'
 import beSomeone from 'assets/collage/cutouts/be-someone-mural-cutout.webp'
 import astronaut from 'assets/collage/cutouts/space-center-astronaut-cutout.webp'
