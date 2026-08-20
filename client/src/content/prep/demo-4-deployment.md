@@ -5,7 +5,7 @@ part: 4
 totalParts: 4
 slug: demo-4-deployment
 title: "Deploying it, and getting the links to preview correctly"
-liveUrl: "https://d2853gcepgolzb.cloudfront.net"
+liveUrl: "https://meditations.launchit.studio"
 order: 4
 date: "Built as a personal project"
 readTime: "~5 minutes"

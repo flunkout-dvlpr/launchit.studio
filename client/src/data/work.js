@@ -51,7 +51,7 @@ export default [
   {
     title: 'Daily Meditations',
     description: "Turns Marcus Aurelius's Meditations into short modern-English daily passages with reflection prompts.",
-    link: 'https://d2853gcepgolzb.cloudfront.net'
+    link: 'https://meditations.launchit.studio'
   },
   {
     title: 'La Lotería',

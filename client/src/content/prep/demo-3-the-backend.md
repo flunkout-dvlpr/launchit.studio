@@ -5,7 +5,7 @@ part: 3
 totalParts: 4
 slug: demo-3-the-backend
 title: "The backend that texts you one passage a day"
-liveUrl: "https://d2853gcepgolzb.cloudfront.net"
+liveUrl: "https://meditations.launchit.studio"
 order: 3
 date: "Built as a personal project"
 readTime: "~6 minutes"

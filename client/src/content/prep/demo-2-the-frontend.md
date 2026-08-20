@@ -5,7 +5,7 @@ part: 2
 totalParts: 4
 slug: demo-2-the-frontend
 title: "Building a frontend that feels like reading, not an app"
-liveUrl: "https://d2853gcepgolzb.cloudfront.net"
+liveUrl: "https://meditations.launchit.studio"
 order: 2
 date: "Built as a personal project"
 readTime: "~6 minutes"

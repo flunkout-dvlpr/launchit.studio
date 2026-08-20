@@ -5,7 +5,7 @@ part: 1
 totalParts: 4
 slug: demo-1-text-to-dataset
 title: "Turning a public-domain text into a dataset"
-liveUrl: "https://d2853gcepgolzb.cloudfront.net"
+liveUrl: "https://meditations.launchit.studio"
 order: 1
 date: "Built as a personal project"
 readTime: "~5 minutes"
