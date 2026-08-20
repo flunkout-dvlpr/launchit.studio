@@ -100,6 +100,14 @@
         <q-btn to="/sessions/framework" flat no-caps label="Full framework →" class="font-label how-it-works__link" @click="trackEvent('cta_click', { label: 'how-it-works-full-framework' })" />
       </div>
     </section>
+
+    <router-link
+      to="/"
+      class="sessions-home__other-projects font-label"
+      @click="trackEvent('cta_click', { label: 'sessions-other-projects' })"
+    >
+      Check out other Launchit projects →
+    </router-link>
   </q-page>
 </template>
 
@@ -306,5 +314,30 @@ onMounted(() => {
 .how-it-works__link {
   color: var(--coral);
   margin-top: 2.5rem;
+}
+
+// Fixed, not part of the document flow — stays reachable in the corner
+// regardless of scroll position, without competing for attention with the
+// page's own content. Coral is what gives it the "pop," size and weight
+// stay deliberately understated.
+.sessions-home__other-projects {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--coral);
+  text-decoration: none;
+  z-index: 10;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 0.75rem;
+  }
 }
 </style>

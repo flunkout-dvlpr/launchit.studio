@@ -4,6 +4,21 @@
 // no confirmed live instance, hence no link.
 export default [
   {
+    title: 'La Lotería',
+    description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
+    link: 'https://d1g478ncyw9arv.cloudfront.net'
+  },
+  {
+    title: 'Daily Meditations',
+    description: "Turns Marcus Aurelius's Meditations into short modern-English daily passages with reflection prompts.",
+    link: 'https://meditations.launchit.studio'
+  },
+  {
+    title: 'Steelmill Gym',
+    description: 'Redesign concept for an old-school Houston Heights bodybuilding gym, rebuilt from Wix into a fast modern site.',
+    link: 'https://d2o6sntgwqzr70.cloudfront.net'
+  },
+  {
     title: 'Home Financing Center',
     description: 'WordPress-to-Vue rebuild for a South Florida mortgage lender — faster site, same trusted branding.',
     link: 'https://www.homefinancingcenter.com'
@@ -14,9 +29,9 @@ export default [
     link: 'https://d1tkc36wtuokrt.cloudfront.net'
   },
   {
-    title: 'Steelmill Gym',
-    description: 'Redesign concept for an old-school Houston Heights bodybuilding gym, rebuilt from Wix into a fast modern site.',
-    link: 'https://d2o6sntgwqzr70.cloudfront.net'
+    title: 'Platr Meal Planner',
+    description: "Builds a personalized multi-day meal plan from Platr's real menu to hit your macros, with one-click ordering.",
+    link: 'https://d16v0snpm7wrwe.cloudfront.net'
   },
   {
     title: '10th Fitness',
@@ -47,21 +62,6 @@ export default [
     title: 'PermitPulse',
     description: "Open Data Day datathon entry turning Sugar Land's building-permit data into a map of where the city is growing.",
     link: 'https://d3300qf46cmy2c.cloudfront.net'
-  },
-  {
-    title: 'Daily Meditations',
-    description: "Turns Marcus Aurelius's Meditations into short modern-English daily passages with reflection prompts.",
-    link: 'https://meditations.launchit.studio'
-  },
-  {
-    title: 'La Lotería',
-    description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
-    link: 'https://d1g478ncyw9arv.cloudfront.net'
-  },
-  {
-    title: 'Platr Meal Planner',
-    description: "Builds a personalized multi-day meal plan from Platr's real menu to hit your macros, with one-click ordering.",
-    link: 'https://d16v0snpm7wrwe.cloudfront.net'
   },
   {
     title: 'Pump Log',
