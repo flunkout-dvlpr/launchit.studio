@@ -2,11 +2,8 @@
   <div class="work-card-content">
     <span
       class="pill-tag work-card-content__type"
-      :class="[
-        item.type === 'webapp' ? 'pill-tag--teal' : 'pill-tag--gold',
-        { 'work-card-content__type--hidden': !item.type }
-      ]"
-    >{{ item.type === 'webapp' ? 'Web App' : item.type === 'website' ? 'Website' : ' ' }}</span>
+      :class="[typeTag.class, { 'work-card-content__type--hidden': !item.type }]"
+    >{{ typeTag.label }}</span>
     <h2 class="font-display work-card-content__title">
       <span v-if="item.icon" class="work-card-content__icon" aria-hidden="true">{{ item.icon }}</span>
       {{ item.title }}
@@ -17,9 +14,21 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   item: { type: Object, required: true }
 })
+
+// coral is reserved for the "Visit" CTA elsewhere on the card, so it's
+// deliberately excluded from this map.
+const TYPE_TAGS = {
+  webapp: { label: 'Web App', class: 'pill-tag--teal' },
+  website: { label: 'Website', class: 'pill-tag--gold' },
+  device: { label: 'Physical Device', class: 'pill-tag--outline' }
+}
+
+const typeTag = computed(() => TYPE_TAGS[props.item.type] || { label: ' ', class: 'pill-tag--gold' })
 </script>
 
 <style lang="scss" scoped>

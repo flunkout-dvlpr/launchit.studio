@@ -6,8 +6,9 @@
 // type: 'webapp' for anything with real interactivity (accounts, data
 // entry, generation, gameplay, tracking); 'website' for informational/
 // marketing sites with no real backend behavior beyond maybe a contact
-// form. Omitted entirely for things that aren't primarily a hosted site
-// at all (Project Switcher is a local tool).
+// form; 'device' for physical hardware with a companion showcase site
+// (Sixty-Four). Omitted entirely for things that aren't primarily a
+// hosted site at all (Project Switcher is a local tool).
 //
 // icon: an emoji, picked per what the project actually is, not a generic
 // default — more color/pop than a Material Icon for this size of card.
@@ -16,6 +17,13 @@
 // — the card grid is sized off that. Keep new descriptions at or under
 // 142 characters so every card stays the same size.
 export default [
+  {
+    title: 'Sixty-Four',
+    description: 'A homemade 64×64 LED display run by an ESP32 and a Raspberry Pi: now-playing, clocks, weather, live scores and storm alerts.',
+    link: 'https://sixtyfour.launchit.studio',
+    type: 'device',
+    icon: '💡'
+  },
   {
     title: 'La Lotería',
     description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
@@ -82,7 +90,7 @@ export default [
   {
     title: 'Blast to the Past',
     description: "Drag a dial to any year from 1965-2020, get that year's Billboard Hot 100, and export it as a real Spotify playlist.",
-    link: '',
+    link: 'https://blast.launchit.studio',
     type: 'webapp',
     icon: '🎵'
   },
@@ -106,6 +114,13 @@ export default [
     link: 'https://dq0ag6mos5oil.cloudfront.net',
     type: 'webapp',
     icon: '🏋️‍♂️'
+  },
+  {
+    title: 'MealReps',
+    description: 'Macro-first meal prep PWA — build an ingredient library, compose meals, plan full days, and generate a shopping list.',
+    link: 'https://mealreps.launchit.studio',
+    type: 'webapp',
+    icon: '🍱'
   },
   {
     title: 'Lena Health',
