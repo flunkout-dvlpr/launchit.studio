@@ -9,15 +9,8 @@
 
         <q-space />
 
-        <button
-          ref="bioLinkEl"
-          class="studio-nav__link studio-bio-trigger font-label"
-          @mouseenter="underline"
-          @mouseleave="unUnderline"
-          @click="openBio"
-        >
-          Bio
-          <span class="studio-nav__underline" />
+        <button ref="bioLinkEl" class="studio-bio-trigger" aria-label="About me" @click="openBio">
+          <img :src="bioPhoto" alt="" class="studio-bio-trigger__img" width="36" height="36" />
         </button>
 
         <!-- Sessions + Contact hidden for now — flip these back on when ready. -->
@@ -60,6 +53,7 @@ import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion
 import { trackEvent } from 'boot/analytics'
 import LogoMark from 'components/LogoMark.vue'
 import BioModal from 'components/BioModal.vue'
+import bioPhoto from 'assets/bio-photo.webp'
 
 const $q = useQuasar()
 const wordmarkEl = ref(null)
@@ -237,15 +231,34 @@ function onLogoClick (e) {
   transform-origin: left;
 }
 
-// A <button>, not a link (it opens a modal, doesn't navigate) — resets the
-// browser's default button chrome so it reads identically to the .studio-
-// nav__link anchors it's styled alongside.
+// Small profile-picture-style trigger, not a text nav link — opens the bio
+// modal. Reset to a plain circular button rather than the underline-hover
+// treatment the (currently hidden) text nav links use, since there's no
+// label text here to underline.
 .studio-bio-trigger {
-  background: none;
-  border: none;
+  flex: none;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  font: inherit;
+  border: none;
+  border-radius: 50%;
+  background: none;
   cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+}
+
+.studio-bio-trigger__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--paper);
+  box-shadow: 0 0 0 1.5px rgba(62, 124, 166, 0.5);
 }
 
 // Below Quasar's "sm" breakpoint (<600px), the full wordmark plus both nav
