@@ -5,8 +5,13 @@
       <div class="bio-modal__panel">
         <button class="bio-modal__close" aria-label="Close" @click="close">×</button>
 
-        <span class="font-label bio-modal__eyebrow">ABOUT</span>
-        <h2 class="font-display bio-modal__title">Who's building this.</h2>
+        <div class="bio-modal__header">
+          <img :src="bioPhoto" alt="" class="bio-modal__photo" width="72" height="72" />
+          <div>
+            <span class="font-label bio-modal__eyebrow">ABOUT</span>
+            <h2 class="font-display bio-modal__title">Hi, I'm Julio.</h2>
+          </div>
+        </div>
 
         <p class="font-label bio-modal__text">
           I'm a software developer who learned to build by doing. My path hasn't been
@@ -61,6 +66,7 @@
 import { watch, onBeforeUnmount } from 'vue'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
+import bioPhoto from 'assets/bio-photo.webp'
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false }
@@ -174,6 +180,23 @@ function onLeave(el, done) {
   }
 }
 
+.bio-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.bio-modal__photo {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px rgba(62, 124, 166, 0.35);
+}
+
 .bio-modal__eyebrow {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
@@ -183,7 +206,7 @@ function onLeave(el, done) {
 .bio-modal__title {
   font-size: clamp(1.4rem, 4vw, 1.8rem);
   font-weight: 600;
-  margin: 0.5rem 0 1.25rem;
+  margin: 0.25rem 0 0;
 }
 
 .bio-modal__text {
