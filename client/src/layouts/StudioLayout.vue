@@ -9,6 +9,17 @@
 
         <q-space />
 
+        <button
+          ref="bioLinkEl"
+          class="studio-nav__link studio-bio-trigger font-label"
+          @mouseenter="underline"
+          @mouseleave="unUnderline"
+          @click="openBio"
+        >
+          Bio
+          <span class="studio-nav__underline" />
+        </button>
+
         <!-- Sessions + Contact hidden for now — flip these back on when ready. -->
         <nav v-if="false" ref="navEl" class="studio-nav">
           <router-link to="/sessions" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
@@ -26,6 +37,8 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <BioModal v-model="bioModalOpen" />
 
     <footer class="studio-footer font-label">
       <div class="studio-footer__inner">
@@ -46,11 +59,14 @@ import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 import { trackEvent } from 'boot/analytics'
 import LogoMark from 'components/LogoMark.vue'
+import BioModal from 'components/BioModal.vue'
 
 const $q = useQuasar()
 const wordmarkEl = ref(null)
 const navEl = ref(null)
 const logoMarkEl = ref(null)
+const bioLinkEl = ref(null)
+const bioModalOpen = ref(false)
 const prefersReducedMotion = usePrefersReducedMotion()
 
 onMounted(() => {
@@ -59,6 +75,9 @@ onMounted(() => {
   const wordmark = wordmarkEl.value?.$el
   if (wordmark) {
     gsap.from(wordmark, { x: -40, autoAlpha: 0, duration: 0.6, ease: 'power3.out' })
+  }
+  if (bioLinkEl.value) {
+    gsap.from(bioLinkEl.value, { x: 40, autoAlpha: 0, duration: 0.6, ease: 'power3.out' })
   }
   if (navEl.value) {
     gsap.from(navEl.value.children, { x: 40, autoAlpha: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' })
@@ -70,6 +89,11 @@ onMounted(() => {
   // entrance tween above finishes settling rather than clashing with it.
   gsap.delayedCall(0.9, () => flyRocket())
 })
+
+function openBio () {
+  bioModalOpen.value = true
+  trackEvent('bio_modal_open', { location: 'nav' })
+}
 
 function underline (e) {
   const el = e.currentTarget.querySelector('.studio-nav__underline')
@@ -211,6 +235,17 @@ function onLogoClick (e) {
   background: var(--coral);
   transform: scaleX(0);
   transform-origin: left;
+}
+
+// A <button>, not a link (it opens a modal, doesn't navigate) — resets the
+// browser's default button chrome so it reads identically to the .studio-
+// nav__link anchors it's styled alongside.
+.studio-bio-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
 // Below Quasar's "sm" breakpoint (<600px), the full wordmark plus both nav
