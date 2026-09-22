@@ -29,11 +29,11 @@ export default [
     icon: '🎵'
   },
   {
-    title: 'MealReps',
-    description: 'Macro-first meal prep PWA — build an ingredient library, compose meals, plan full days, and generate a shopping list.',
-    link: 'https://mealreps.launchit.studio',
+    title: 'La Lotería',
+    description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
+    link: 'https://d1g478ncyw9arv.cloudfront.net',
     type: 'webapp',
-    icon: '🍱'
+    icon: '🎴'
   },
   {
     title: 'Sixty-Four',
@@ -43,11 +43,11 @@ export default [
     icon: '💡'
   },
   {
-    title: 'La Lotería',
-    description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
-    link: 'https://d1g478ncyw9arv.cloudfront.net',
+    title: 'MealReps',
+    description: 'Macro-first meal prep PWA — build an ingredient library, compose meals, plan full days, and generate a shopping list.',
+    link: 'https://mealreps.launchit.studio',
     type: 'webapp',
-    icon: '🎴'
+    icon: '🍱'
   },
   {
     title: 'Daily Meditations',
@@ -125,13 +125,6 @@ export default [
     link: 'https://dq0ag6mos5oil.cloudfront.net',
     type: 'webapp',
     icon: '🏋️‍♂️'
-  },
-  {
-    title: 'Lena Health',
-    description: 'Family health tracker for doctors, prescriptions, appointments, and care notes in one place.',
-    link: '',
-    type: 'webapp',
-    icon: '🩺'
   },
   {
     title: 'Project Switcher',

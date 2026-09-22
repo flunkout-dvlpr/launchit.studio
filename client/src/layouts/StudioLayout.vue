@@ -2,14 +2,15 @@
   <q-layout view="hHh lpr fFf" class="studio-layout">
     <q-header class="studio-header">
       <q-toolbar class="studio-toolbar">
-        <router-link ref="wordmarkEl" to="/" class="studio-wordmark font-label">
-          <LogoMark :size="$q.screen.lt.sm ? 40 : 56" class="studio-wordmark__mark" />
+        <router-link ref="wordmarkEl" to="/" class="studio-wordmark font-label" @click="onLogoClick">
+          <LogoMark ref="logoMarkEl" :size="$q.screen.lt.sm ? 40 : 56" class="studio-wordmark__mark" />
           LAUNCHIT <span class="text-weight-bold">STUDIO</span>
         </router-link>
 
         <q-space />
 
-        <nav ref="navEl" class="studio-nav">
+        <!-- Sessions + Contact hidden for now — flip these back on when ready. -->
+        <nav v-if="false" ref="navEl" class="studio-nav">
           <router-link to="/sessions" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
             Sessions
             <span class="studio-nav__underline" />
@@ -49,6 +50,7 @@ import LogoMark from 'components/LogoMark.vue'
 const $q = useQuasar()
 const wordmarkEl = ref(null)
 const navEl = ref(null)
+const logoMarkEl = ref(null)
 const prefersReducedMotion = usePrefersReducedMotion()
 
 onMounted(() => {
@@ -61,6 +63,12 @@ onMounted(() => {
   if (navEl.value) {
     gsap.from(navEl.value.children, { x: 40, autoAlpha: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' })
   }
+
+  // Same auto-play-on-landing rocket flight as SessionsLayout — this layout
+  // only ever renders on "/" (its one child route), so no path check needed
+  // there, but delayed the same way, to start after the wordmark's own
+  // entrance tween above finishes settling rather than clashing with it.
+  gsap.delayedCall(0.9, () => flyRocket())
 })
 
 function underline (e) {
@@ -70,6 +78,79 @@ function underline (e) {
 function unUnderline (e) {
   const el = e.currentTarget.querySelector('.studio-nav__underline')
   gsap.to(el, { scaleX: 0, duration: 0.2, ease: 'power2.in' })
+}
+
+// Ported from SessionsLayout.vue's flyRocket — same clone-and-fly technique
+// (see there for the full rationale): the rocket lives inside a small,
+// tightly-cropped SVG that can't animate within itself without clipping, so
+// a fixed-position clone flies around the viewport and lands back at an
+// x/y offset of exactly 0,0 before cleanup.
+function flyRocket (onComplete) {
+  const rocketEl = logoMarkEl.value?.rocketSvgEl
+  if (!rocketEl) {
+    onComplete?.()
+    return
+  }
+
+  const rect = rocketEl.getBoundingClientRect()
+  const clone = rocketEl.cloneNode(true)
+  Object.assign(clone.style, {
+    position: 'fixed',
+    top: `${rect.top}px`,
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    margin: '0',
+    zIndex: 4000,
+    pointerEvents: 'none'
+  })
+  document.body.appendChild(clone)
+  rocketEl.style.visibility = 'hidden'
+
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  const path = [
+    { x: vw * 0.82 - rect.left, y: vh * 0.18 - rect.top }, // upper right
+    { x: vw * 0.1 - rect.left, y: vh * 0.5 - rect.top }, // middle left
+    { x: vw * 0.82 - rect.left, y: vh * 0.82 - rect.top }, // lower right
+    { x: 0, y: 0 } // back to its own exact starting position
+  ]
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      document.body.removeChild(clone)
+      rocketEl.style.visibility = ''
+      onComplete?.()
+    }
+  })
+
+  tl.to(
+    clone,
+    {
+      // Net baked-in facing direction is -90deg + 30deg = -60deg off +x —
+      // see SessionsLayout.vue's flyRocket for the full explanation of
+      // where that offset comes from.
+      motionPath: { path, curviness: 1.5, autoRotate: 60 },
+      duration: 5.6,
+      ease: 'sine.inOut'
+    },
+    0
+  )
+  tl.to(
+    clone,
+    { scale: 1.3, duration: 1.3, ease: 'sine.inOut', yoyo: true, repeat: 1 },
+    0
+  )
+  tl.to(clone, { rotation: 0, duration: 0.25, ease: 'power2.out' })
+}
+
+function onLogoClick (e) {
+  // Already home (this layout only ever renders "/"), so the click itself
+  // doesn't need to navigate anywhere — just replay the flight, same as
+  // clicking the Sessions logo while already on /sessions would.
+  e.preventDefault()
+  if (prefersReducedMotion.value) return
+  flyRocket()
 }
 </script>
 
