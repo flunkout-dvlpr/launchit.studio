@@ -64,6 +64,13 @@ export default [
     icon: '🏋️'
   },
   {
+    title: 'My Fit Foods Meal Planner',
+    description: "Builds a personalized multi-day meal plan from My Fit Foods' real menu to hit your macros, with one-click ordering.",
+    link: 'https://d2lljxs9lrcc7q.cloudfront.net',
+    type: 'webapp',
+    icon: '🍽️'
+  },
+  {
     title: 'Home Financing Center',
     description: 'WordPress-to-Vue rebuild for a South Florida mortgage lender — faster site, same trusted branding.',
     link: 'https://www.homefinancingcenter.com',
@@ -76,13 +83,6 @@ export default [
     link: 'https://d1tkc36wtuokrt.cloudfront.net',
     type: 'webapp',
     icon: '🎓'
-  },
-  {
-    title: 'My Fit Foods Meal Planner',
-    description: "Builds a personalized multi-day meal plan from My Fit Foods' real menu to hit your macros, with one-click ordering.",
-    link: 'https://d2lljxs9lrcc7q.cloudfront.net',
-    type: 'webapp',
-    icon: '🍽️'
   },
   {
     title: '10th Fitness',
