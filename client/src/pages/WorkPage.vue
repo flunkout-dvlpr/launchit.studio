@@ -57,11 +57,11 @@ import work from 'src/data/work.js'
 const gridSection = ref(null)
 const prefersReducedMotion = usePrefersReducedMotion()
 const modes = [
+  { value: 'zoom', label: 'Explore' },
   { value: 'grid', label: 'Grid' },
-  { value: 'filmstrip', label: 'Film Strip' },
-  { value: 'zoom', label: 'Explore' }
+  { value: 'filmstrip', label: 'Film Strip' }
 ]
-const mode = ref('filmstrip')
+const mode = ref('zoom')
 
 function setMode(value) {
   mode.value = value

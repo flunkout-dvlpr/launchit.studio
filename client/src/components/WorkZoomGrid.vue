@@ -85,7 +85,10 @@ const cellSize = computed(() => {
 })
 
 const focusedRow = ref(0)
-const focusedCol = ref(0)
+// Starts on the center column of the first row (COLS is 3, so index 1)
+// rather than the top-left corner — reads as "here's the middle of the
+// row, pan either way" instead of implying the grid only goes rightward.
+const focusedCol = ref(Math.min(1, maxColInRow(0)))
 const focusedIndex = computed(() => focusedRow.value * COLS + focusedCol.value)
 
 let inputLocked = false
