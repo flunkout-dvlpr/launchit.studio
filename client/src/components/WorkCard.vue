@@ -99,4 +99,22 @@ const typeTag = computed(() => TYPE_TAGS[props.item.type] || { label: ' ', class
   align-self: flex-start;
   margin-top: auto;
 }
+
+// The 2-line/5-line reservations above exist so every card in a grid ROW
+// matches height — at a single mobile column there's no row to match
+// against (each card is the only thing on its line), so that reserved
+// space was just dead whitespace, and a card this much wider than a
+// desktop grid column wraps the same text to noticeably fewer lines
+// anyway. Both combine into cards reading as too tall/not square. Relax
+// the reservations here instead of just shrinking padding, since padding
+// wasn't the actual cause.
+@media (max-width: 600px) {
+  .work-card-content__title {
+    min-height: calc(1.3em * 1);
+  }
+
+  .work-card-content__description {
+    min-height: calc(1.55em * 3);
+  }
+}
 </style>

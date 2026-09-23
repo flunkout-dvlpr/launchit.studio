@@ -36,7 +36,11 @@
 
     <footer class="studio-footer font-label">
       <div class="studio-footer__inner">
-        <span class="pill-tag pill-tag--outline tilt-left">HOUSTON</span>
+        <div class="studio-footer__cities">
+          <span class="pill-tag pill-tag--outline tilt-left">HOUSTON</span>
+          <span class="pill-tag pill-tag--outline tilt-right">MIAMI</span>
+          <span class="pill-tag pill-tag--outline tilt-left">NEW YORK</span>
+        </div>
         <p class="studio-footer__text">
           Launchit Studio — design and development.
           <a href="mailto:hello@launchit.studio" @click="trackEvent('contact_click', { location: 'footer' })">hello@launchit.studio</a>
@@ -309,6 +313,12 @@ function onLogoClick (e) {
 .studio-footer__inner {
   max-width: 1100px;
   margin: 0 auto;
+}
+
+.studio-footer__cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.75rem;
 }
 
 .studio-footer__text {

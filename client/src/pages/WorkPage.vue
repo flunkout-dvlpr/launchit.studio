@@ -164,5 +164,9 @@ onMounted(() => {
     border-color: var(--coral);
     transform: translateY(-3px);
   }
+
+  @media (max-width: 600px) {
+    padding: 1.25rem;
+  }
 }
 </style>
