@@ -56,7 +56,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useQuasar } from 'quasar'
-import { gsap } from 'boot/gsap'
+import { gsap, ScrollTrigger } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 import { trackEvent } from 'boot/analytics'
 import WorkCard from 'components/WorkCard.vue'
@@ -247,16 +247,41 @@ function onCardClick(item, i, e) {
   if (item.link) trackEvent('outbound_click', { label: item.title, url: item.link })
 }
 
+let scrollTrigger = null
+
 onMounted(() => {
   if (prefersReducedMotion.value) return
   window.addEventListener('keydown', onKeydown)
-  // Settle the stage at cell (0,0) before any input, same centering math
-  // as every subsequent move.
+
+  // Without this, .work-zoom's "100vh viewport" is only actually aligned
+  // with the browser's visible window at one specific scroll position —
+  // the section sits below the hero in normal flow, so on load only part
+  // of its own 100vh box is on-screen, and animateToFocus()'s centering
+  // math (which assumes the full box is visible) puts the card lower than
+  // true viewport-center. Scrolling further then only shows a different
+  // partial slice, clipping it further rather than correcting it.
+  // Pinning guarantees the section exactly fills the viewport the instant
+  // it's scrolled to, and keeps it there while our own wheel/touch
+  // handlers are capturing input — re-centering on enter picks up
+  // whatever the real, settled viewport size is at that moment rather
+  // than trusting the mount-time measurement.
+  scrollTrigger = ScrollTrigger.create({
+    trigger: sectionEl.value,
+    start: 'top top',
+    end: '+=300',
+    pin: true,
+    onEnter: animateToFocus,
+    onEnterBack: animateToFocus
+  })
+
+  // Settle the stage at the starting cell immediately too, so there's a
+  // reasonable position even before the section is scrolled to.
   animateToFocus()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
+  scrollTrigger?.kill()
 })
 </script>
 
