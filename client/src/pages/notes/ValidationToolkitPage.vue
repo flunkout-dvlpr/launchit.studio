@@ -73,13 +73,24 @@
               <tr class="vt-table__example">
                 <td>Busy working parents</td>
                 <td>Wants more time back in the week</td>
-                <td>Assumed, from the founder's own experience</td>
+                <td>Assumed</td>
                 <td>Interview 8-10 people matching this profile who aren't already in the founder's network</td>
               </tr>
               <tr v-for="(row, i) in segments" :key="i">
                 <td><textarea v-model="row.segment" class="vt-input" rows="1" aria-label="Segment" /></td>
                 <td><textarea v-model="row.need" class="vt-input" rows="1" aria-label="Assumed need" /></td>
-                <td><textarea v-model="row.status" class="vt-input" rows="1" aria-label="Status" /></td>
+                <td class="vt-table__status">
+                  <div class="vt-status">
+                    <button
+                      v-for="option in STATUS_OPTIONS"
+                      :key="option"
+                      type="button"
+                      class="vt-status__btn"
+                      :class="[`vt-status__btn--${option.toLowerCase()}`, { 'vt-status__btn--active': row.status === option }]"
+                      @click="row.status = option"
+                    >{{ option }}</button>
+                  </div>
+                </td>
                 <td class="vt-table__row-with-remove">
                   <textarea v-model="row.howToValidate" class="vt-input" rows="1" aria-label="How to validate" />
                   <button type="button" class="vt-remove" aria-label="Remove this segment row" @click="removeSegment(i)">×</button>
@@ -219,7 +230,7 @@
           <tr>
             <td>Busy working parents</td>
             <td>Wants more time back in the week</td>
-            <td>Assumed, from the founder's own experience</td>
+            <td>Assumed</td>
             <td>Interview 8-10 people matching this profile who aren't already in the founder's network</td>
           </tr>
           <tr v-for="(row, i) in filledSegments" :key="i">
@@ -271,7 +282,7 @@ const filledSegments = computed(() => segments.value.filter(
 const printDate = computed(() => new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))
 
 function addSegment () {
-  segments.value.push({ segment: '', need: '', status: '', howToValidate: '' })
+  segments.value.push({ segment: '', need: '', status: 'Unknown', howToValidate: '' })
   trackEvent('toolkit_segment_add', {})
 }
 
@@ -293,7 +304,15 @@ function loadSaved () {
         canvas[i].status = s.status || 'Unknown'
       })
     }
-    if (Array.isArray(saved.segments)) segments.value = saved.segments
+    if (Array.isArray(saved.segments)) {
+      // Status used to be free text before the toggle buttons — normalize
+      // anything saved from that version so it doesn't just show as no
+      // button selected.
+      segments.value = saved.segments.map((row) => ({
+        ...row,
+        status: STATUS_OPTIONS.includes(row.status) ? row.status : 'Unknown'
+      }))
+    }
   } catch (err) {
     // Corrupt/old localStorage data shouldn't break the page — just start fresh.
   }
