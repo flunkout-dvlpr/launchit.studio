@@ -24,15 +24,35 @@
           guess, not yet tested), or <b>Unknown</b> (not addressed yet).
         </p>
         <div class="vt-table-wrap">
-          <table class="vt-table">
+          <table class="vt-table vt-table--canvas">
             <thead>
-              <tr><th>Block</th><th>Prompt</th><th>Status</th></tr>
+              <tr><th>Block</th><th>Prompt</th><th>Your answer</th><th>Status</th></tr>
             </thead>
             <tbody>
               <tr v-for="row in canvas" :key="row.block">
                 <td class="vt-table__block">{{ row.block }}</td>
-                <td>{{ row.prompt }}</td>
-                <td class="vt-table__status"></td>
+                <td class="vt-table__prompt">{{ row.prompt }}</td>
+                <td>
+                  <textarea
+                    v-model="row.answer"
+                    class="vt-input"
+                    rows="2"
+                    placeholder="Write it in…"
+                    :aria-label="`Your answer for ${row.block}`"
+                  />
+                </td>
+                <td class="vt-table__status">
+                  <div class="vt-status">
+                    <button
+                      v-for="option in STATUS_OPTIONS"
+                      :key="option"
+                      type="button"
+                      class="vt-status__btn"
+                      :class="[`vt-status__btn--${option.toLowerCase()}`, { 'vt-status__btn--active': row.status === option }]"
+                      @click="row.status = option"
+                    >{{ option }}</button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -56,12 +76,25 @@
                 <td>Assumed, from the founder's own experience</td>
                 <td>Interview 8-10 people matching this profile who aren't already in the founder's network</td>
               </tr>
-              <tr><td></td><td></td><td></td><td></td></tr>
-              <tr><td></td><td></td><td></td><td></td></tr>
+              <tr v-for="(row, i) in segments" :key="i">
+                <td><textarea v-model="row.segment" class="vt-input" rows="1" aria-label="Segment" /></td>
+                <td><textarea v-model="row.need" class="vt-input" rows="1" aria-label="Assumed need" /></td>
+                <td><textarea v-model="row.status" class="vt-input" rows="1" aria-label="Status" /></td>
+                <td class="vt-table__row-with-remove">
+                  <textarea v-model="row.howToValidate" class="vt-input" rows="1" aria-label="How to validate" />
+                  <button type="button" class="vt-remove" aria-label="Remove this segment row" @click="removeSegment(i)">×</button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+        <button type="button" class="vt-add-row font-label" @click="addSegment">+ Add a segment</button>
       </section>
+
+      <p class="vt-persist-note font-label">
+        <span>Saved automatically in your browser as you type — nothing is sent anywhere.</span>
+        <button type="button" class="vt-clear" @click="onClearAll">Clear everything</button>
+      </p>
 
       <div class="dimension-line" />
 
@@ -155,26 +188,87 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { gsap, ScrollTrigger } from 'boot/gsap'
 import { trackEvent } from 'boot/analytics'
 
 const root = ref(null)
+const STORAGE_KEY = 'launchit-validation-toolkit-v1'
+const STATUS_OPTIONS = ['Unknown', 'Assumed', 'Validated']
 
-const canvas = [
-  { block: 'Problem', prompt: "What's the top 1-3 problems worth solving?" },
-  { block: 'Customer segments', prompt: 'Who has this problem badly enough to act?' },
-  { block: 'Unique value proposition', prompt: 'Why would they choose this over doing nothing, or over the workaround they already use?' },
-  { block: 'Solution', prompt: "What's the smallest version that addresses the problem?" },
-  { block: 'Channels', prompt: 'How would the right people actually find out this exists?' },
-  { block: 'Revenue streams', prompt: 'Who pays, how much, and why would they keep paying?' },
-  { block: 'Cost structure', prompt: 'What does it cost to deliver this, including the ongoing human labor, not just the build?' },
-  { block: 'Key metrics', prompt: 'What number would actually prove this is working, and is anything measuring it yet?' },
-  { block: 'Unfair advantage', prompt: "What's genuinely hard for someone else to copy?" }
-]
+// reactive(), not ref() — canvas rows are edited in place (row.answer,
+// row.status) from the template, and a plain array of reactive objects
+// needs no .value indirection for that.
+const canvas = reactive([
+  { block: 'Problem', prompt: "What's the top 1-3 problems worth solving?", answer: '', status: 'Unknown' },
+  { block: 'Customer segments', prompt: 'Who has this problem badly enough to act?', answer: '', status: 'Unknown' },
+  { block: 'Unique value proposition', prompt: 'Why would they choose this over doing nothing, or over the workaround they already use?', answer: '', status: 'Unknown' },
+  { block: 'Solution', prompt: "What's the smallest version that addresses the problem?", answer: '', status: 'Unknown' },
+  { block: 'Channels', prompt: 'How would the right people actually find out this exists?', answer: '', status: 'Unknown' },
+  { block: 'Revenue streams', prompt: 'Who pays, how much, and why would they keep paying?', answer: '', status: 'Unknown' },
+  { block: 'Cost structure', prompt: 'What does it cost to deliver this, including the ongoing human labor, not just the build?', answer: '', status: 'Unknown' },
+  { block: 'Key metrics', prompt: 'What number would actually prove this is working, and is anything measuring it yet?', answer: '', status: 'Unknown' },
+  { block: 'Unfair advantage', prompt: "What's genuinely hard for someone else to copy?", answer: '', status: 'Unknown' }
+])
+
+// User-added rows only — the one example row in the template is static
+// reference content, not part of this editable/persisted list.
+const segments = ref([])
+
+function addSegment () {
+  segments.value.push({ segment: '', need: '', status: '', howToValidate: '' })
+  trackEvent('toolkit_segment_add', {})
+}
+
+function removeSegment (i) {
+  segments.value.splice(i, 1)
+}
+
+function loadSaved () {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return
+    const saved = JSON.parse(raw)
+    // Matched by array index, not a stored key — canvas's block order is
+    // fixed in code, so this is safe and avoids needing a lookup.
+    if (Array.isArray(saved.canvas)) {
+      saved.canvas.forEach((s, i) => {
+        if (!canvas[i]) return
+        canvas[i].answer = s.answer || ''
+        canvas[i].status = s.status || 'Unknown'
+      })
+    }
+    if (Array.isArray(saved.segments)) segments.value = saved.segments
+  } catch (err) {
+    // Corrupt/old localStorage data shouldn't break the page — just start fresh.
+  }
+}
+
+function persist () {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      canvas: canvas.map(({ answer, status }) => ({ answer, status })),
+      segments: segments.value
+    }))
+  } catch (err) {
+    // Storage can be unavailable (private browsing, quota) — fill-in state
+    // just won't persist across a refresh, the page itself still works.
+  }
+}
+
+function onClearAll () {
+  if (!window.confirm("Clear everything you've filled in on this page? This can't be undone.")) return
+  canvas.forEach(row => { row.answer = ''; row.status = 'Unknown' })
+  segments.value = []
+  try { localStorage.removeItem(STORAGE_KEY) } catch (err) { /* see persist() */ }
+  trackEvent('toolkit_clear_all', {})
+}
 
 onMounted(() => {
   window.scrollTo(0, 0)
+  loadSaved()
+  watch([canvas, segments], persist, { deep: true })
+
   root.value.querySelectorAll('.reveal').forEach((el, i) => {
     gsap.from(el, {
       scrollTrigger: { trigger: el, start: 'top 85%', once: true },
@@ -286,13 +380,163 @@ onMounted(() => {
   white-space: nowrap;
 }
 
+.vt-table__prompt {
+  opacity: 0.75;
+}
+
 .vt-table__status {
-  min-width: 90px;
+  min-width: 120px;
 }
 
 .vt-table__example td {
   opacity: 0.6;
   font-style: italic;
+}
+
+.vt-table__row-with-remove {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+
+  .vt-input {
+    flex: 1;
+  }
+}
+
+// --- Fill-in controls -----------------------------------------------------------
+.vt-input {
+  width: 100%;
+  min-width: 140px;
+  border: 1px solid rgba(62, 124, 166, 0.35);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-label);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--navy);
+  padding: 0.4rem 0.55rem;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: var(--coral);
+    background: var(--paper);
+  }
+
+  &::placeholder {
+    color: var(--navy);
+    opacity: 0.35;
+  }
+}
+
+.vt-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.vt-status__btn {
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(62, 124, 166, 0.4);
+  background: transparent;
+  color: var(--navy);
+  opacity: 0.5;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.vt-status__btn--active {
+  opacity: 1;
+  border-color: transparent;
+
+  &.vt-status__btn--validated {
+    background: var(--teal);
+    color: var(--paper);
+  }
+  &.vt-status__btn--assumed {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  &.vt-status__btn--unknown {
+    background: rgba(62, 124, 166, 0.3);
+    color: var(--navy);
+  }
+}
+
+.vt-add-row {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--coral);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.vt-remove {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(62, 124, 166, 0.15);
+  color: var(--navy);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--coral);
+    color: var(--paper);
+  }
+}
+
+.vt-persist-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  font-size: 0.78rem;
+  opacity: 0.55;
+  margin: 0.5rem 0 0;
+}
+
+.vt-clear {
+  flex: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.78rem;
+  font-family: var(--font-label);
+  text-decoration: underline;
+  color: var(--navy);
+  opacity: 0.8;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--coral);
+    opacity: 1;
+  }
 }
 
 // --- Interview Q&A -----------------------------------------------------------
