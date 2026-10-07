@@ -1,6 +1,6 @@
 <template>
   <q-page class="vt-page grid-texture">
-    <div ref="root" class="vt-page__inner">
+    <div ref="root" class="vt-page__inner vt-screen-only">
       <header class="vt-header reveal">
         <router-link to="/notes/validation-ladder" class="vt-back font-label" @click="trackEvent('notes_back_click', { from: 'toolkit' })">← The Validation Ladder</router-link>
         <span class="pill-tag pill-tag--gold tilt-right">NOTES · PART 2</span>
@@ -94,6 +94,7 @@
       <p class="vt-persist-note font-label">
         <span>Saved automatically in your browser as you type — nothing is sent anywhere.</span>
         <span class="vt-persist-note__actions">
+          <button type="button" class="vt-export" @click="exportPdf">Export as PDF ↓</button>
           <button type="button" class="vt-export" @click="exportMarkdown">Export as Markdown ↓</button>
           <button type="button" class="vt-clear" @click="onClearAll">Clear everything</button>
         </span>
@@ -187,11 +188,54 @@
         </div>
       </section>
     </div>
+
+    <!-- Print-only view — plain text/tables, not the interactive
+         textareas/toggle buttons above. A <textarea> prints clipped to its
+         on-screen box height, not its full content, so a real answer of
+         any length would get cut off in the printed version; this
+         duplicates the same data as plain flowing text instead, which
+         wraps and paginates normally. Hidden on screen, shown only via
+         the @media print rule below. -->
+    <div class="vt-print" aria-hidden="true">
+      <h1 class="vt-print__title">Validation Toolkit</h1>
+      <p class="vt-print__date">Filled in {{ printDate }} — launchit.studio/notes/validation-ladder/toolkit</p>
+
+      <h2 class="vt-print__section-title">Lean Canvas</h2>
+      <div v-for="row in canvas" :key="`print-${row.block}`" class="vt-print__block">
+        <div class="vt-print__block-head">
+          <h3>{{ row.block }}</h3>
+          <span class="vt-print__status" :class="`vt-print__status--${row.status.toLowerCase()}`">{{ row.status }}</span>
+        </div>
+        <p class="vt-print__prompt">{{ row.prompt }}</p>
+        <p class="vt-print__answer">{{ row.answer.trim() || 'Not filled in yet.' }}</p>
+      </div>
+
+      <h2 class="vt-print__section-title">Segments</h2>
+      <table class="vt-print__table">
+        <thead>
+          <tr><th>Segment</th><th>Assumed need</th><th>Status</th><th>How to validate</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Busy working parents</td>
+            <td>Wants more time back in the week</td>
+            <td>Assumed, from the founder's own experience</td>
+            <td>Interview 8-10 people matching this profile who aren't already in the founder's network</td>
+          </tr>
+          <tr v-for="(row, i) in filledSegments" :key="i">
+            <td>{{ row.segment }}</td>
+            <td>{{ row.need }}</td>
+            <td>{{ row.status }}</td>
+            <td>{{ row.howToValidate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </q-page>
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { gsap, ScrollTrigger } from 'boot/gsap'
 import { trackEvent } from 'boot/analytics'
 
@@ -217,6 +261,14 @@ const canvas = reactive([
 // User-added rows only — the one example row in the template is static
 // reference content, not part of this editable/persisted list.
 const segments = ref([])
+
+// Print view skips genuinely blank rows (someone clicked "+ Add a segment"
+// and left it empty) rather than rendering empty table rows.
+const filledSegments = computed(() => segments.value.filter(
+  (row) => row.segment || row.need || row.status || row.howToValidate
+))
+
+const printDate = computed(() => new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))
 
 function addSegment () {
   segments.value.push({ segment: '', need: '', status: '', howToValidate: '' })
@@ -300,6 +352,15 @@ function exportMarkdown () {
   URL.revokeObjectURL(url)
 
   trackEvent('toolkit_export', { format: 'markdown' })
+}
+
+// Browser print-to-PDF, not a PDF library — the .vt-print block below is a
+// plain-text/table duplicate of the same data, shown only under
+// @media print, so "export" here is just "print, then choose Save as PDF
+// as the destination" in the browser's own dialog.
+function exportPdf () {
+  trackEvent('toolkit_export', { format: 'pdf' })
+  window.print()
 }
 
 function onClearAll () {
@@ -700,6 +761,157 @@ onMounted(() => {
   &:hover {
     opacity: 1;
     color: var(--coral);
+  }
+}
+
+// --- Print-only view -----------------------------------------------------------
+// Physical units (cm/pt) throughout this section, not rem — more reliable
+// across print engines than viewport-relative units, and this content is
+// never shown on screen so rem's usual job (matching the page's own scale)
+// doesn't apply here.
+.vt-print {
+  display: none;
+}
+
+@media print {
+  .vt-screen-only {
+    display: none !important;
+  }
+
+  .vt-print {
+    display: block;
+    font-family: var(--font-label);
+    color: var(--navy);
+  }
+}
+
+.vt-print__title {
+  font-family: var(--font-display);
+  font-size: 22pt;
+  font-weight: 600;
+  margin: 0 0 0.3cm;
+}
+
+.vt-print__date {
+  font-size: 9pt;
+  opacity: 0.6;
+  margin: 0 0 1cm;
+}
+
+.vt-print__section-title {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  font-weight: 600;
+  margin: 1cm 0 0.5cm;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.vt-print__block {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 0.6cm;
+  padding-bottom: 0.5cm;
+  border-bottom: 0.5pt solid rgba(62, 124, 166, 0.4);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.vt-print__block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4cm;
+
+  h3 {
+    font-family: var(--font-display);
+    font-size: 12.5pt;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.vt-print__status {
+  flex: none;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.1cm 0.3cm;
+  border-radius: 999px;
+  background: rgba(62, 124, 166, 0.25);
+  color: var(--navy);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+
+  &--validated {
+    background: var(--teal);
+    color: var(--paper);
+  }
+  &--assumed {
+    background: var(--gold);
+    color: var(--navy);
+  }
+}
+
+.vt-print__prompt {
+  font-size: 9.5pt;
+  font-style: italic;
+  opacity: 0.65;
+  margin: 0.2cm 0;
+}
+
+.vt-print__answer {
+  font-size: 10.5pt;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.vt-print__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+
+  th,
+  td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.25cm 0.3cm;
+    border: 0.5pt solid rgba(62, 124, 166, 0.4);
+  }
+
+  th {
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    background: rgba(62, 124, 166, 0.12);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+</style>
+
+<style>
+/* Unscoped — needs to reach StudioLayout's header/footer, which live
+   outside this component. Print should show only the .vt-print content
+   above, not site chrome. */
+@media print {
+  .studio-header,
+  .studio-footer {
+    display: none !important;
+  }
+
+  @page {
+    margin: 1.8cm;
   }
 }
 </style>
