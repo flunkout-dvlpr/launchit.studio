@@ -93,7 +93,10 @@
 
       <p class="vt-persist-note font-label">
         <span>Saved automatically in your browser as you type — nothing is sent anywhere.</span>
-        <button type="button" class="vt-clear" @click="onClearAll">Clear everything</button>
+        <span class="vt-persist-note__actions">
+          <button type="button" class="vt-export" @click="exportMarkdown">Export as Markdown ↓</button>
+          <button type="button" class="vt-clear" @click="onClearAll">Clear everything</button>
+        </span>
       </p>
 
       <div class="dimension-line" />
@@ -254,6 +257,49 @@ function persist () {
     // Storage can be unavailable (private browsing, quota) — fill-in state
     // just won't persist across a refresh, the page itself still works.
   }
+}
+
+// A single Markdown file covering both fill-in sections — easier to
+// actually use in a conversation (paste into an email/doc, or just read)
+// than a raw JSON dump, and needs no PDF library/new dependency.
+function exportMarkdown () {
+  const cell = (v) => (v || '').trim().replace(/\|/g, '\\|').replace(/\n/g, ' ')
+  const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
+  let md = `# Validation Toolkit\n\nFilled in ${date}.\n\n## Lean Canvas\n\n`
+
+  canvas.forEach((row) => {
+    md += `### ${row.block}\n\n`
+    md += `**Prompt:** ${row.prompt}\n\n`
+    md += `**Status:** ${row.status}\n\n`
+    md += `${row.answer.trim() || '_Not filled in yet._'}\n\n`
+  })
+
+  md += `## Segments\n\n`
+  if (segments.value.length === 0) {
+    md += '_No segments added yet._\n\n'
+  } else {
+    md += '| Segment | Assumed need | Status | How to validate |\n'
+    md += '|---|---|---|---|\n'
+    segments.value.forEach((row) => {
+      md += `| ${cell(row.segment)} | ${cell(row.need)} | ${cell(row.status)} | ${cell(row.howToValidate)} |\n`
+    })
+    md += '\n'
+  }
+
+  md += `---\n\nFrom ${window.location.origin}/notes/validation-ladder/toolkit\n`
+
+  const blob = new Blob([md], { type: 'text/markdown' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'validation-toolkit.md'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+
+  trackEvent('toolkit_export', { format: 'markdown' })
 }
 
 function onClearAll () {
@@ -521,7 +567,14 @@ onMounted(() => {
   margin: 0.5rem 0 0;
 }
 
-.vt-clear {
+.vt-persist-note__actions {
+  display: flex;
+  flex: none;
+  gap: 1.25rem;
+}
+
+.vt-clear,
+.vt-export {
   flex: none;
   background: none;
   border: none;
@@ -529,12 +582,25 @@ onMounted(() => {
   font-size: 0.78rem;
   font-family: var(--font-label);
   text-decoration: underline;
+  cursor: pointer;
+}
+
+.vt-clear {
   color: var(--navy);
   opacity: 0.8;
-  cursor: pointer;
 
   &:hover {
     color: var(--coral);
+    opacity: 1;
+  }
+}
+
+.vt-export {
+  color: var(--coral);
+  opacity: 0.85;
+  font-weight: 600;
+
+  &:hover {
     opacity: 1;
   }
 }
