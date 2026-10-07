@@ -127,7 +127,8 @@
         <ul class="vt-reading">
           <li><b>The Mom Test</b> — Rob Fitzpatrick. Short, and built entirely around this exact problem.</li>
           <li><b>Testing Business Ideas</b> — David Bland and Alexander Osterwalder. A catalog of experiments ranked by cost and evidence strength — basically the ladder expanded into a full book.</li>
-          <li><b>Running Lean</b> — Ash Maurya. The Lean Canvas itself, plus the problem interview and solution interview scripts it's built around.</li>
+          <li><b>Business Model Generation</b> — Alexander Osterwalder and Yves Pigneur. The original business model canvas, and the book that's actually behind the fill-in canvas above.</li>
+          <li><b>Running Lean</b> — Ash Maurya. The Lean Canvas, a startup-specific adaptation of the same canvas, plus the problem interview and solution interview scripts it's built around.</li>
           <li><b>Talking to Humans</b> — Giff Constable. Short and practical, a good next read once the first few interviews are booked.</li>
         </ul>
       </section>
