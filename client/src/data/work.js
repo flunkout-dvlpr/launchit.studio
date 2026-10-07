@@ -3,9 +3,10 @@
 // not just inferred from a deploy-state.json — a handful legitimately have
 // no confirmed live instance, hence no link.
 //
-// Order: Blast to the Past and MealReps lead the list (most complete/
-// technically ambitious builds), ahead of every other webapp/website/device
-// entry — a deliberate placement, not alphabetical or chronological.
+// Order: Blast to the Past, Circles, and MealReps lead the list (most
+// complete/technically ambitious builds), ahead of every other webapp/
+// website/device entry — a deliberate placement, not alphabetical or
+// chronological.
 //
 // type: 'webapp' for anything with real interactivity (accounts, data
 // entry, generation, gameplay, tracking); 'website' for informational/
@@ -27,6 +28,13 @@ export default [
     link: 'https://blast.launchit.studio',
     type: 'webapp',
     icon: '🎵'
+  },
+  {
+    title: 'Circles',
+    description: "An explorable grid of Mac Miller's discography — arrow or swipe through eras and alter egos, each album its own visual world.",
+    link: 'https://launchit.studio/mac/',
+    type: 'webapp',
+    icon: '💿'
   },
   {
     title: 'La Lotería',
@@ -80,7 +88,7 @@ export default [
   {
     title: 'Ideal Instruction',
     description: 'Full WordPress-to-Quasar migration for a teacher-development company — every page, video showcase, and account flow rebuilt on a modern stack.',
-    link: 'https://d1tkc36wtuokrt.cloudfront.net',
+    link: 'https://www.ideal-instruction.com',
     type: 'webapp',
     icon: '🎓'
   },
