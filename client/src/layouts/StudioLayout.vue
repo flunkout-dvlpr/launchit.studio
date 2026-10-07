@@ -9,17 +9,21 @@
 
         <q-space />
 
-        <nav ref="navEl" class="studio-nav">
-          <router-link to="/notes" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
-            Notes
-            <span class="studio-nav__underline" />
-          </router-link>
-        </nav>
+        <div class="studio-nav-group">
+          <nav ref="navEl" class="studio-nav">
+            <router-link to="/notes" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
+              Notes
+              <span class="studio-nav__underline" />
+            </router-link>
+          </nav>
 
-        <button ref="bioLinkEl" class="studio-bio-trigger font-label" @click="openBio">
-          <img :src="bioPhoto" alt="" class="studio-bio-trigger__img" width="36" height="36" />
-          Bio
-        </button>
+          <span class="studio-nav-divider" aria-hidden="true" />
+
+          <button ref="bioLinkEl" class="studio-bio-trigger font-label" @click="openBio">
+            <img :src="bioPhoto" alt="" class="studio-bio-trigger__img" width="36" height="36" />
+            Bio
+          </button>
+        </div>
 
         <!-- Sessions + Contact hidden for now — flip these back on when ready. -->
         <nav v-if="false" class="studio-nav">
@@ -242,8 +246,26 @@ function onLogoClick (e) {
   flex: none;
 }
 
+// Groups the text nav links and the Bio avatar trigger so they share one
+// consistent gap and vertical centering — left as separate siblings, the
+// plain-text link and the much taller avatar+label button read as two
+// unrelated, mismatched things crowding each other rather than one
+// deliberate nav cluster.
+.studio-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.studio-nav-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(62, 124, 166, 0.35);
+}
+
 .studio-nav {
   display: flex;
+  align-items: center;
   gap: 2rem;
 }
 
@@ -315,6 +337,10 @@ function onLogoClick (e) {
   .studio-wordmark {
     font-size: 0.85rem;
     gap: 0.35rem;
+  }
+
+  .studio-nav-group {
+    gap: 0.85rem;
   }
 
   .studio-nav {

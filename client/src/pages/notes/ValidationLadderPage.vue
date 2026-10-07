@@ -6,9 +6,11 @@
         <h1 class="font-display vl-header__title">Building got cheap. Validation didn't.</h1>
         <p class="font-label vl-header__lede">
           A working prototype used to take months and real money. Now it takes a
-          weekend. That doesn't make an idea safer — it just moves the real risk
-          somewhere less visible: whether the problem is real enough, for enough
-          people, that they come back without being asked.
+          weekend. That was never the actual obstacle — the real one has always
+          been the same: whether the problem is real enough, for enough people,
+          that they come back without being asked. Cheap, fast prototyping
+          doesn't remove that risk, it just means it surfaces a lot sooner,
+          instead of hiding behind months of build time.
         </p>
       </header>
 
@@ -17,16 +19,17 @@
       <section class="reveal">
         <h2 class="font-label vl-label">Where this comes from</h2>
         <p class="font-label vl-body">
-          I was introduced to the Lean Canvas, Ash Maurya's version of the business
-          model canvas, during Impact Hub Houston's accelerator program. It's a
-          good tool. It's also, in my experience, the single most common tool to
-          fill out with confident guesses and then treat like proof. I've since
-          worked across a handful of early-stage teams and startups, alongside my
-          day-to-day work as a software developer at Left Field Labs, and the same
-          pattern keeps showing up regardless of the industry: building is not the
-          obstacle anymore. Market validation — returning users, active users,
-          engaged users — is the actual obstacle. This is my attempt to write that
-          down properly instead of just repeating it in conversation.
+          I was first introduced to the business model canvas through the VMT
+          Group's mentorship, via Alexander Osterwalder's <i>Business Model
+          Generation</i>. I've since used and seen it used again across Impact Hub
+          Houston's accelerator program and a handful of other early-stage teams,
+          alongside my day-to-day work as a software developer at Left Field Labs.
+          It's a good tool. It's also, in my experience, the single most common
+          tool to fill out with confident guesses and then treat like proof. The
+          same pattern keeps showing up regardless of the industry: building is
+          not the obstacle anymore. Market validation — returning users, active
+          users, engaged users — is the actual obstacle. This is my attempt to
+          write that down properly instead of just repeating it in conversation.
         </p>
       </section>
 
@@ -109,7 +112,6 @@
           <span class="vl-tier-row__name">Opinion</span>
           <span class="vl-tier-row__detail">
             <span class="vl-tier-row__def">Anyone's view that the problem is real, including the founder's own. Costs nothing to say, costs nothing to agree with.</span>
-            <span class="vl-tier-row__ex"><b>Dropbox</b> is usually cited here too: a demo video and an overnight waitlist spike. It measured attention, not a decision to pay or change behavior, so it's weaker evidence than it's given credit for.</span>
           </span>
         </div>
         <div class="vl-tier-row vl-tier-row--real">
@@ -117,7 +119,7 @@
           <span class="vl-tier-row__name">Problem interview</span>
           <span class="vl-tier-row__detail">
             <span class="vl-tier-row__def">A structured conversation with a real target customer about what already happened to them, not about the idea.</span>
-            <span class="vl-tier-row__ex">Confirms the problem exists, how often, how painful, and what they already do about it today.</span>
+            <span class="vl-tier-row__ex">Confirms the problem exists, how often, how painful, and what they already do about it today. <b>Dropbox</b> is usually cited at this tier — a demo video and an overnight waitlist spike — but it's a weak example of it: that measured attention, not a real conversation about past behavior. A real problem interview looks like sitting down with 10 target customers and asking what they've actually tried already, not watching a signup count climb.</span>
           </span>
         </div>
         <div class="vl-tier-row vl-tier-row--real">
@@ -156,11 +158,50 @@
           confidence from smart people, but they're still closer to tier 0 — an
           informed opinion, not a stranger giving up money or coming back
           unprompted. When we got to real market fit, the honest answer was that we
-          were caught in between: too big a build for the customer who'd actually
-          commit, too small a wedge for the customer we'd been picturing. That gap
-          is exactly where a lot of accelerator-stage ideas quietly stall, and it's
-          survivable, but only if it's named early instead of after the build is
+          were caught between two segments, for two different reasons:
+        </p>
+        <ul class="vl-list">
+          <li><b>Small businesses</b> — the mom-and-pop shops actually drowning in spare change — mostly didn't see it as a problem worth solving. Most of them are owner-run, and the owner can just walk the cash to the bank themselves. The pain we were picturing wasn't really theirs.</li>
+          <li><b>Larger businesses</b> understood the real cost of handling cash perfectly well, but none of them wanted to be the first to try an unproven solution. Every one of them wanted to see someone else validate it first.</li>
+          <li>And underneath both: the economics were genuinely hard. There were real transaction costs on every conversion, and figuring out how to structure fees without quietly eating the spare change itself (the entire value proposition) was a real unsolved problem — before even getting to the regulatory path, where the clean way to do this is a money transmitter license, which is a massive undertaking both financially and regulatorily for a team at our stage.</li>
+        </ul>
+        <p class="font-label vl-body">
+          That's the kind of gap a canvas full of confident guesses doesn't surface
+          on its own. It's survivable, but only if it's named early, from actual
+          conversations with both ends of the market, instead of after the build is
           already done.
+        </p>
+      </section>
+
+      <div class="dimension-line" />
+
+      <section class="reveal">
+        <span class="pill-tag pill-tag--teal tilt-right vl-case__status">A rare exception, from my own experience</span>
+        <h2 class="font-display vl-case__title">USI</h2>
+        <p class="font-label vl-body">
+          Earlier in my career I worked at USI, an oil & gas data analytics
+          startup. The founder had spent roughly a decade actually working in oil &
+          gas before starting the company — the problem he was building for was
+          one he'd personally dealt with on a daily basis, his peers ran into the
+          same thing, and the industry as a whole was dealing with it too.
+        </p>
+        <p class="font-label vl-body">
+          Earlier in this piece I called industry conviction supply-side, not
+          demand-side — and as a general rule, that holds. USI is the rare
+          exception that actually proves it: when the founder isn't just
+          industry-adjacent but genuinely <i>is</i> the target customer, living the
+          exact problem alongside real peers who have it too, that conviction
+          stops being a guess and starts being something closer to an inside view
+          of real, ongoing demand. It's rare precisely because most founders aren't
+          actually the customer in this specific way.
+        </p>
+        <p class="font-label vl-body">
+          Even then, the conviction itself wasn't the proof — what actually
+          validated it was what happened next: in the first year, with a rough,
+          genuinely buggy prototype, we closed roughly 10 B2B contracts. In oil &
+          gas, that's real money. Tier 2 evidence, and then some, from a product
+          that hadn't earned it on polish alone — it earned it because the problem
+          and the customer were both already correctly understood going in.
         </p>
       </section>
 
@@ -271,6 +312,18 @@ onMounted(() => {
   margin: 1rem 0;
   padding-left: 1rem;
   border-left: 2px dashed rgba(62, 124, 166, 0.5);
+}
+
+.vl-list {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.65rem;
+  line-height: 1.65;
+
+  b {
+    font-weight: 600;
+  }
 }
 
 .vl-quote {
