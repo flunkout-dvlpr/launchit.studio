@@ -1,11 +1,16 @@
 const routes = [
   // Root: the studio portfolio — a grid of client/side-project work, no
-  // blog, no resume. Sessions is a separate section at /sessions.
+  // blog, no resume. Sessions is a separate section at /sessions. /notes
+  // is a small, separate "field notes" section — frameworks/thinking
+  // pieces, not project work — sharing this same layout/nav/footer.
   {
     path: '/',
     component: () => import('layouts/StudioLayout.vue'),
     children: [
-      { path: '', name: 'work', component: () => import('pages/WorkPage.vue') }
+      { path: '', name: 'work', component: () => import('pages/WorkPage.vue') },
+      { path: 'notes', name: 'notes-index', component: () => import('pages/notes/NotesIndexPage.vue') },
+      { path: 'notes/validation-ladder', name: 'notes-validation-ladder', component: () => import('pages/notes/ValidationLadderPage.vue') },
+      { path: 'notes/validation-ladder/toolkit', name: 'notes-validation-toolkit', component: () => import('pages/notes/ValidationToolkitPage.vue') }
     ]
   },
 

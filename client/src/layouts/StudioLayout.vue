@@ -9,13 +9,20 @@
 
         <q-space />
 
+        <nav ref="navEl" class="studio-nav">
+          <router-link to="/notes" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
+            Notes
+            <span class="studio-nav__underline" />
+          </router-link>
+        </nav>
+
         <button ref="bioLinkEl" class="studio-bio-trigger font-label" @click="openBio">
           <img :src="bioPhoto" alt="" class="studio-bio-trigger__img" width="36" height="36" />
           Bio
         </button>
 
         <!-- Sessions + Contact hidden for now — flip these back on when ready. -->
-        <nav v-if="false" ref="navEl" class="studio-nav">
+        <nav v-if="false" class="studio-nav">
           <router-link to="/sessions" class="studio-nav__link font-label" @mouseenter="underline" @mouseleave="unUnderline">
             Sessions
             <span class="studio-nav__underline" />
@@ -51,8 +58,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 import { trackEvent } from 'boot/analytics'
@@ -61,6 +69,7 @@ import BioModal from 'components/BioModal.vue'
 import bioPhoto from 'assets/bio-photo.webp'
 
 const $q = useQuasar()
+const router = useRouter()
 const wordmarkEl = ref(null)
 const navEl = ref(null)
 const logoMarkEl = ref(null)
@@ -82,17 +91,34 @@ onMounted(() => {
     gsap.from(navEl.value.children, { x: 40, autoAlpha: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' })
   }
 
-  // Same auto-play-on-landing rocket flight as SessionsLayout — this layout
-  // only ever renders on "/" (its one child route), so no path check needed
-  // there, but delayed the same way, to start after the wordmark's own
-  // entrance tween above finishes settling rather than clashing with it.
-  gsap.delayedCall(0.9, () => flyRocket())
+  // Same auto-play-on-landing rocket flight as SessionsLayout — now that
+  // this layout also wraps /notes/*, it needs the same path check Sessions
+  // uses: only autoplay on the true root landing, not every page under
+  // here. Delayed to start after the wordmark's own entrance tween above
+  // finishes settling rather than clashing with it.
+  if (router.currentRoute.value.path === '/') {
+    gsap.delayedCall(0.9, () => flyRocket())
+  }
 })
 
 function openBio () {
   bioModalOpen.value = true
   trackEvent('bio_modal_open', { location: 'nav' })
 }
+
+// This layout persists across /, /notes, /notes/* navigation — only
+// router-view swaps — so clicking "Notes" while hovering it never fires
+// mouseleave (the cursor stays put on a link that's still mounted),
+// leaving its underline stuck "on" until the mouse happens to move off
+// later. Same bug/fix as SessionsLayout's nav.
+watch(
+  () => router.currentRoute.value.path,
+  () => {
+    if (!navEl.value) return
+    const underlines = navEl.value.querySelectorAll('.studio-nav__underline')
+    gsap.set(underlines, { scaleX: 0 })
+  }
+)
 
 function underline (e) {
   const el = e.currentTarget.querySelector('.studio-nav__underline')
@@ -168,12 +194,17 @@ function flyRocket (onComplete) {
 }
 
 function onLogoClick (e) {
-  // Already home (this layout only ever renders "/"), so the click itself
-  // doesn't need to navigate anywhere — just replay the flight, same as
-  // clicking the Sessions logo while already on /sessions would.
   e.preventDefault()
-  if (prefersReducedMotion.value) return
-  flyRocket()
+
+  function goHome () {
+    if (router.currentRoute.value.path !== '/') router.push('/')
+  }
+
+  if (prefersReducedMotion.value) {
+    goHome()
+    return
+  }
+  flyRocket(goHome)
 }
 </script>
 

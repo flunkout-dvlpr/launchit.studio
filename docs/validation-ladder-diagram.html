@@ -1,0 +1,286 @@
+<!--
+  Reference diagram, not yet wired into the site. Generic on purpose: no client or
+  project is named anywhere in here, so it's safe to adapt as a real page (Vue
+  component, launchit.studio brand tokens: paper/navy/gridline/coral/gold/teal,
+  Space Grotesk + Fraunces per docs/brand-identity.md) without stripping anything first.
+  Companion content: docs/validation-ladder.md.
+-->
+<title>The Validation Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  /* Layout: a single scrolling case file. Hero claim, then the ladder diagram as the spine, then the detail and one live example hang off it. */
+  --bg: hsl(210 24% 96%);
+  --surface: hsl(210 30% 99%);
+  --ink: hsl(222 40% 11%);
+  --muted: hsl(222 15% 40%);
+  --line: hsl(214 20% 85%);
+  --accent: hsl(40 88% 44%);
+  --accent-ink: hsl(40 90% 14%);
+  --flat: hsl(222 10% 52%);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg: hsl(222 32% 8%);
+    --surface: hsl(222 26% 12%);
+    --ink: hsl(210 30% 94%);
+    --muted: hsl(214 14% 66%);
+    --line: hsl(222 20% 23%);
+    --accent: hsl(40 90% 58%);
+    --accent-ink: hsl(40 95% 10%);
+    --flat: hsl(214 12% 52%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg: hsl(222 32% 8%);
+  --surface: hsl(222 26% 12%);
+  --ink: hsl(210 30% 94%);
+  --muted: hsl(214 14% 66%);
+  --line: hsl(222 20% 23%);
+  --accent: hsl(40 90% 58%);
+  --accent-ink: hsl(40 95% 10%);
+  --flat: hsl(214 12% 52%);
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:17px;
+  line-height:1.6;
+  padding-left:20px;
+  padding-right:20px;
+}
+h1,h2,h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;line-height:1.1;margin:0;text-wrap:balance;color:var(--ink)}
+p{margin:0}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace}
+.wrap{max-width:720px;margin:0 auto}
+.wide{max-width:920px;margin:0 auto}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:3px}
+
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* Hero */
+.hero{padding:64px 0 40px}
+.hero h1{font-size:clamp(34px,6vw,56px);font-style:italic;max-width:14ch}
+.hero .lede{margin-top:20px;font-size:19px;max-width:56ch;color:var(--ink)}
+.hero .sub{margin-top:10px;color:var(--muted);max-width:56ch}
+
+/* Escape answers */
+.escapes{padding:12px 0 48px;display:grid;gap:14px}
+.escapes h2{font-size:22px;font-style:italic}
+.escapes .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.tag{
+  border-bottom:2px dashed var(--flat);
+  padding:6px 2px 8px;
+  font-size:16px;
+  color:var(--ink);
+}
+.tag::before{content:"\201C";color:var(--muted)}
+.tag::after{content:"\201D";color:var(--muted)}
+.escapes p.why{color:var(--muted);max-width:60ch;margin-top:4px}
+
+/* Diagram */
+.figure-section{padding:20px 0 8px}
+.figure-wrap{
+  max-width:960px;margin:0 auto;
+  overflow-x:auto;
+  padding:8px 4px 4px;
+}
+.figure-wrap svg{display:block;min-width:680px;width:100%;height:auto;color:var(--ink)}
+figcaption{
+  max-width:720px;margin:14px auto 0;
+  color:var(--muted);font-size:15px;text-align:center;
+}
+.ladder-flat{fill:none;stroke:var(--flat);stroke-width:3;stroke-dasharray:2 7;stroke-linecap:round}
+.ladder-climb{fill:none;stroke:var(--accent);stroke-width:4;stroke-linejoin:round;stroke-linecap:round}
+.ladder-beyond{fill:none;stroke:var(--accent);stroke-width:3;stroke-dasharray:1 7;stroke-linecap:round}
+.dot-flat{fill:var(--surface);stroke:var(--flat);stroke-width:2.5}
+.dot-climb{fill:var(--accent)}
+.tier-num{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:25px;fill:var(--ink);text-anchor:middle}
+.tier-num--flat{fill:var(--muted)}
+.tier-name{font-family:'Work Sans',sans-serif;font-weight:600;font-size:12.5px;fill:var(--muted);text-anchor:middle}
+.chip{font-family:'Work Sans',sans-serif;font-size:12.5px;fill:var(--ink);text-anchor:middle}
+.quote{font-family:'Work Sans',sans-serif;font-style:italic;font-size:11.5px;fill:var(--muted);text-anchor:middle}
+.axis-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;fill:var(--muted);text-transform:uppercase}
+.tip-label{font-family:'IBM Plex Mono',monospace;font-size:12px;fill:var(--accent);text-anchor:end}
+.arrowhead{fill:var(--accent)}
+
+/* Tier detail rows */
+.tiers{padding:44px 0 8px;display:grid;gap:0}
+.tier-row{
+  display:grid;grid-template-columns:52px 160px 1fr;gap:18px;
+  padding:20px 0;border-top:1px solid var(--line);
+  transition:background .15s;
+}
+.tier-row:last-child{border-bottom:1px solid var(--line)}
+.tier-row:hover{background:var(--surface)}
+.tier-row .n{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:var(--muted)}
+.tier-row.is-real .n{color:var(--accent)}
+.tier-row .name{font-weight:700;font-size:17px;align-self:start;padding-top:4px}
+.tier-row .detail{display:grid;gap:6px;min-width:0}
+.tier-row .def{color:var(--ink)}
+.tier-row .ex{color:var(--muted);font-size:15.5px}
+.tier-row .ex b{color:var(--ink);font-weight:600}
+
+/* Case callout */
+.case{padding:48px 0 8px}
+.case .box{
+  border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:4px;background:var(--surface);
+  padding:24px 26px;display:grid;gap:10px;
+}
+.case h3{font-size:22px;font-style:italic}
+.case ul{margin:4px 0 0;padding-left:20px;display:grid;gap:6px;color:var(--ink)}
+.case .status{
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent-ink);background:var(--accent);
+  display:inline-block;padding:3px 9px;border-radius:999px;width:fit-content;
+}
+
+/* Closing */
+.closing{padding:56px 0 72px}
+.closing .rule{border:0;border-top:1px solid var(--line);margin:0 0 32px}
+.closing .statement{font-size:clamp(22px,3.2vw,30px);font-style:italic;max-width:20ch}
+.closing .note{margin-top:22px;color:var(--muted);font-size:15px;max-width:56ch}
+
+@media (max-width:620px){
+  .tier-row{grid-template-columns:40px 1fr;grid-template-areas:"n name" "detail detail"}
+  .tier-row .n{grid-area:n}
+  .tier-row .name{grid-area:name}
+  .tier-row .detail{grid-area:detail}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<article class="hero wrap">
+  <p class="eyebrow">A framework for early-stage ideas</p>
+  <h1>Building got cheap. Validation didn't.</h1>
+  <p class="lede">A working prototype used to take months and real money. Now it takes a weekend. That doesn't make an idea safer, it just moves the real risk somewhere less visible: whether the problem is real enough, for enough people, that they come back without being asked.</p>
+  <p class="sub">This page is a way to tell the difference between a conversation that feels like proof and a test that actually is one.</p>
+</article>
+
+<section class="escapes wrap">
+  <h2>Three answers that aren't evidence</h2>
+  <p class="why">These come up in almost every one of these conversations, and all three feel like validation while costing the person saying them nothing.</p>
+  <div class="row">
+    <span class="tag">Oh yeah, this is a real need</span>
+    <span class="tag">I know the industry, this is much needed</span>
+    <span class="tag">My friends, family and peers agree this is a real need</span>
+  </div>
+  <p class="why">An opinion, about a hypothetical, from someone who isn't the customer and pays no cost for being wrong. None of them climb.</p>
+</section>
+
+<section class="figure-section">
+  <div class="figure-wrap">
+    <figure style="margin:0">
+      <svg viewBox="0 0 1000 480" role="img" aria-label="A staircase diagram with four tiers of evidence. Tier zero, opinion, is a flat dashed line that never rises and holds the three quotes that feel like validation. Tiers one through three, problem interview, costly commitment, and recurring behavior, rise as solid steps, each stronger than the last. Dropbox sits at the interview tier, Airbnb and DoorDash at the costly commitment tier, and Uber crossing from costly commitment into recurring behavior.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path class="arrowhead" d="M0,0 L10,5 L0,10 z"></path>
+          </marker>
+        </defs>
+
+        <text class="axis-label" x="20" y="260" transform="rotate(-90 20 260)" text-anchor="middle">evidence strength</text>
+
+        <!-- Tier 0: flat, does not climb -->
+        <polyline class="ladder-flat" points="40,430 250,430"></polyline>
+        <circle class="dot-flat" cx="40" cy="430" r="5"></circle>
+        <text class="tier-num tier-num--flat" x="40" y="382">0</text>
+        <text class="tier-name" x="40" y="400">Opinion</text>
+        <text class="quote" x="120" y="258">“it's needed”</text>
+        <text class="quote" x="120" y="280">“I know the industry”</text>
+        <text class="quote" x="120" y="302">“friends agree”</text>
+
+        <!-- Tiers 1-3: the real climb -->
+        <polyline class="ladder-climb" points="250,430 250,350 440,350 440,270 630,270 630,190 900,190"></polyline>
+        <circle class="dot-climb" cx="250" cy="350" r="6"></circle>
+        <circle class="dot-climb" cx="440" cy="270" r="6"></circle>
+        <circle class="dot-climb" cx="630" cy="190" r="6"></circle>
+
+        <text class="tier-num" x="250" y="298">1</text>
+        <text class="tier-name" x="250" y="316">Problem interview</text>
+        <text class="chip" x="345" y="332">Dropbox</text>
+
+        <text class="tier-num" x="440" y="218">2</text>
+        <text class="tier-name" x="440" y="236">Costly commitment</text>
+        <text class="chip" x="535" y="252">Airbnb · DoorDash</text>
+
+        <text class="tier-num" x="630" y="138">3</text>
+        <text class="tier-name" x="630" y="156">Recurring behavior</text>
+        <text class="chip" x="720" y="172">Uber</text>
+
+        <polyline class="ladder-beyond" points="900,190 958,142" marker-end="url(#arrow)"></polyline>
+        <text class="tip-label" x="950" y="128">a business</text>
+      </svg>
+      <figcaption>Opinion sits flat, it never rises on its own. Real evidence climbs: a problem interview, then a costly commitment, then behavior that repeats without a push.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="tiers wrap">
+  <div class="tier-row">
+    <span class="n">0</span>
+    <span class="name">Opinion</span>
+    <span class="detail">
+      <span class="def">Anyone's view that the problem is real, including your own. Costs nothing to say, costs nothing to agree with.</span>
+      <span class="ex"><b>Dropbox</b> is usually cited here too: a demo video and an overnight waitlist spike. It measured attention, not a decision to pay or change behavior, so it's weaker evidence than it's given credit for.</span>
+    </span>
+  </div>
+  <div class="tier-row is-real">
+    <span class="n">1</span>
+    <span class="name">Problem interview</span>
+    <span class="detail">
+      <span class="def">A structured conversation with a real target customer about what already happened to them, not about your idea.</span>
+      <span class="ex">Confirms the problem exists, how often, how painful, and what they already do about it today.</span>
+    </span>
+  </div>
+  <div class="tier-row is-real">
+    <span class="n">2</span>
+    <span class="name">Costly commitment</span>
+    <span class="detail">
+      <span class="def">The person gives up something real, money, time or reputation, before the product fully exists.</span>
+      <span class="ex"><b>Airbnb</b> rented air mattresses in their own apartment during a sold-out conference and took real payment, before any platform existed. <b>DoorDash</b> ran a one-page site listing a few restaurant menus and drove the food themselves, before any delivery software existed. Neither waited for permission to find out.</span>
+    </span>
+  </div>
+  <div class="tier-row is-real">
+    <span class="n">3</span>
+    <span class="name">Recurring behavior</span>
+    <span class="detail">
+      <span class="def">People come back, pay again, or refer someone else, without you asking them to.</span>
+      <span class="ex"><b>Uber</b> started in one city with one vehicle class, aimed at people already paying for black cars, and watched for repeat use before expanding to new cities or cheaper tiers.</span>
+    </span>
+  </div>
+</section>
+
+<section class="case wrap">
+  <div class="box">
+    <span class="status">applied to one live example</span>
+    <h3>Where a fresh prototype usually sits</h3>
+    <p>A weekend build, demoed once, with the team and a few outside people agreeing it's useful, sits at tier 0 to 1. That's normal for a few days of work, and it's exactly why the next step is obvious once it's named:</p>
+    <ul>
+      <li>8 to 10 problem interviews with people who match the target profile but aren't already in your network, about what they did <em>last time</em>, before the idea is mentioned</li>
+      <li>One real, costly commitment: a waitlist with a deposit, a manual concierge version someone actually uses, a pre-order</li>
+      <li>A way to actually observe behavior, not just collect opinions about it, once real people are using it</li>
+    </ul>
+  </div>
+</section>
+
+<section class="closing wrap">
+  <hr class="rule">
+  <p class="statement">Before building more, climb one more rung.</p>
+  <p class="note">Built to pull up mid-conversation, not to read start to finish. The ladder stays the same from one idea to the next, only the box near the bottom changes.</p>
+</section>
