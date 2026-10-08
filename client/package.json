@@ -15,6 +15,8 @@
     "prebuild": "npm run sync:downloads",
     "build": "quasar build",
     "cutouts": "node scripts/generate-cutouts.js",
+    "avatar-marks": "node scripts/generate-avatar-marks.js",
+    "gallery-shots": "node scripts/generate-gallery-screenshots.js",
     "deploy": "node deploy.js"
   },
   "dependencies": {

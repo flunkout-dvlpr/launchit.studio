@@ -1,6 +1,6 @@
 <template>
   <q-page class="work-page">
-    <section class="work-hero" :class="{ 'work-hero--centered': mode !== 'grid' }">
+    <section class="work-hero" :class="{ 'work-hero--centered': mode === 'filmstrip' || mode === 'zoom' }">
       <div class="work-hero__inner">
         <span class="font-label work-hero__eyebrow">LAUNCHIT STUDIO</span>
         <h1 class="font-display work-hero__title">Selected work.</h1>
@@ -17,6 +17,9 @@
       </div>
     </section>
 
+    <!-- WorkGallery (below, in this same v-if/else-if chain) owns its own
+         full spacing (max-width, padding) on its root element, same as
+         this grid section does on its own — neither needs a wrapper. -->
     <section v-if="mode === 'grid'" ref="gridSection" class="work-grid-section">
       <div class="work-grid">
         <component
@@ -38,6 +41,8 @@
       <WorkFilmStrip />
     </section>
 
+    <WorkGallery v-else-if="mode === 'gallery'" />
+
     <section v-else class="work-mode-section">
       <WorkZoomGrid />
     </section>
@@ -52,6 +57,7 @@ import { trackEvent } from 'boot/analytics'
 import WorkCard from 'components/WorkCard.vue'
 import WorkFilmStrip from 'components/WorkFilmStrip.vue'
 import WorkZoomGrid from 'components/WorkZoomGrid.vue'
+import WorkGallery from 'components/WorkGallery.vue'
 import work from 'src/data/work.js'
 
 const gridSection = ref(null)
@@ -59,7 +65,8 @@ const prefersReducedMotion = usePrefersReducedMotion()
 const modes = [
   { value: 'zoom', label: 'Explore' },
   { value: 'grid', label: 'Grid' },
-  { value: 'filmstrip', label: 'Film Strip' }
+  { value: 'filmstrip', label: 'Film Strip' },
+  { value: 'gallery', label: 'Gallery' }
 ]
 const mode = ref('zoom')
 
