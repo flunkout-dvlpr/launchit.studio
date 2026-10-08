@@ -184,14 +184,14 @@ onMounted(() => {
 }
 
 .bb-header__lede {
-  font-size: 1.05rem;
-  line-height: 1.65;
+  font-size: 1.25rem;
+  line-height: 1.6;
   opacity: 0.85;
   margin: 0;
 }
 
 .bb-label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.55;
@@ -199,6 +199,7 @@ onMounted(() => {
 }
 
 .bb-body {
+  font-size: 1.1rem;
   line-height: 1.7;
   margin: 0;
 
@@ -236,7 +237,7 @@ onMounted(() => {
 }
 
 .bb-closing__note {
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.6;
   opacity: 0.7;
   max-width: 50ch;

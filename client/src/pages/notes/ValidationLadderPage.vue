@@ -278,14 +278,14 @@ onMounted(() => {
 }
 
 .vl-header__lede {
-  font-size: 1.05rem;
-  line-height: 1.65;
+  font-size: 1.25rem;
+  line-height: 1.6;
   opacity: 0.85;
   margin: 0;
 }
 
 .vl-label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.55;
@@ -293,6 +293,7 @@ onMounted(() => {
 }
 
 .vl-body {
+  font-size: 1.1rem;
   line-height: 1.7;
   margin: 0 0 0.9rem;
 
@@ -327,7 +328,7 @@ onMounted(() => {
 }
 
 .vl-quote {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-style: italic;
   opacity: 0.75;
 }
@@ -465,7 +466,7 @@ onMounted(() => {
 
 .vl-tier-row__name {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   align-self: start;
   padding-top: 0.2rem;
 }
@@ -477,11 +478,11 @@ onMounted(() => {
 }
 
 .vl-tier-row__def {
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .vl-tier-row__ex {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   opacity: 0.7;
   line-height: 1.55;
 
@@ -531,7 +532,7 @@ onMounted(() => {
 }
 
 .vl-closing__note {
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.6;
   opacity: 0.7;
   max-width: 50ch;

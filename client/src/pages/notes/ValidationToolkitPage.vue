@@ -441,14 +441,15 @@ onMounted(() => {
 }
 
 .vt-header__lede {
-  line-height: 1.65;
+  font-size: 1.2rem;
+  line-height: 1.6;
   opacity: 0.8;
   max-width: 60ch;
   margin: 0;
 }
 
 .vt-label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.55;
@@ -456,6 +457,7 @@ onMounted(() => {
 }
 
 .vt-body {
+  font-size: 1.05rem;
   line-height: 1.7;
   opacity: 0.85;
   margin: 0 0 1rem;
@@ -724,7 +726,7 @@ onMounted(() => {
   padding-left: 1.1rem;
   display: grid;
   gap: 0.75rem;
-  font-size: 0.88rem;
+  font-size: 0.98rem;
   line-height: 1.55;
   opacity: 0.85;
 
@@ -740,6 +742,7 @@ onMounted(() => {
   padding-left: 1.25rem;
   display: grid;
   gap: 0.75rem;
+  font-size: 1rem;
   line-height: 1.6;
   opacity: 0.85;
 

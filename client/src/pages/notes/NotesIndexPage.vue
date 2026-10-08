@@ -67,7 +67,8 @@ const notes = [
 }
 
 .notes-index__lede {
-  line-height: 1.65;
+  font-size: 1.2rem;
+  line-height: 1.6;
   opacity: 0.8;
   max-width: 54ch;
   margin: 0;
@@ -98,13 +99,13 @@ const notes = [
 }
 
 .notes-index__entry-title {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 600;
   margin: 0 0 0.4rem;
 }
 
 .notes-index__entry-text {
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.5;
   opacity: 0.75;
   margin: 0;
