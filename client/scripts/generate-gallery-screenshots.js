@@ -50,7 +50,11 @@ const CAPTURE_OPTIONS = {
   // requires a typed lobby name, then a second player to join) — the lobby
   // card itself is a real, reasonable "another view," and just needed a
   // real wall-clock wait instead of --virtual-time-budget to render at all.
-  'La Lotería': { waitMs: 6000 }
+  'La Lotería': { waitMs: 6000 },
+  // Login screen only offers phone-number auth — "Try the demo" lands on
+  // the real signed-in dashboard, which then opens a one-time "Got it!"
+  // onboarding tooltip over it.
+  MealReps: { waitMs: 4500, clickSequence: [{ text: 'Try the demo', waitMs: 3000 }, { text: 'Got it', waitMs: 800 }] }
 }
 
 function slugify(title) {
@@ -113,17 +117,25 @@ function clickByTextJs(text) {
   // requiring real visibility — a plain substring match risks hitting an
   // offscreen "Skip to content" accessibility link (first in DOM order on
   // most sites) instead of the actual visible dialog button, which is
-  // usually labeled "Skip →" rather than bare "Skip".
+  // usually labeled "Skip →" rather than bare "Skip". Real interactive
+  // elements (button/a/[role=button]) are tried before generic
+  // div/span/li wrappers — a framework's own click handler is bound to the
+  // innermost <button>, and a synthetic .click() on an ancestor div never
+  // reaches it (click doesn't bubble downward), so matching the outer
+  // wrapper first (whichever happens to come first in DOM order) can look
+  // like a successful click that silently does nothing.
   return `
     (function () {
       var target = ${JSON.stringify(text)};
-      var els = Array.prototype.slice.call(document.querySelectorAll('button, a, [role="button"], li, div, span'));
-      var match = els.find(function (el) {
+      function matches(el) {
         var t = (el.textContent || '').trim().replace(/[^\\p{L}\\p{N} ]+$/gu, '').trim();
         if (t !== target) return false;
         var r = el.getBoundingClientRect();
         return r.width > 0 && r.height > 0 && el.offsetParent !== null;
-      });
+      }
+      var interactive = Array.prototype.slice.call(document.querySelectorAll('button, a, [role="button"]'));
+      var fallback = Array.prototype.slice.call(document.querySelectorAll('li, div, span'));
+      var match = interactive.find(matches) || fallback.find(matches);
       if (match) { match.click(); return true; }
       return false;
     })()
@@ -165,6 +177,18 @@ async function captureOne(item, port) {
         console.warn(`  (no element matched clickText "${opts.clickText}" on ${item.title} — capturing default view)`)
       }
       await new Promise((r) => setTimeout(r, 1200))
+    }
+
+    // Ordered multi-step interaction — e.g. click into a demo account, then
+    // dismiss the onboarding tooltip that opens over the resulting view.
+    if (opts.clickSequence) {
+      for (const step of opts.clickSequence) {
+        const { result } = await send('Runtime.evaluate', { expression: clickByTextJs(step.text) })
+        if (!result || !result.value) {
+          console.warn(`  (no element matched clickSequence step "${step.text}" on ${item.title})`)
+        }
+        await new Promise((r) => setTimeout(r, step.waitMs ?? 1200))
+      }
     }
 
     const { data } = await send('Page.captureScreenshot', { format: 'png' })
