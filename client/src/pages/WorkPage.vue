@@ -1,6 +1,6 @@
 <template>
   <q-page class="work-page">
-    <section class="work-hero" :class="{ 'work-hero--centered': mode === 'filmstrip' || mode === 'zoom' }">
+    <section class="work-hero" :class="{ 'work-hero--centered': mode === 'filmstrip' }">
       <div class="work-hero__inner">
         <span class="font-label work-hero__eyebrow">LAUNCHIT STUDIO</span>
         <h1 class="font-display work-hero__title">Selected work.</h1>
