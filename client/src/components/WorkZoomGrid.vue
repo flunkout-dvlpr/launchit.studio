@@ -96,6 +96,14 @@ const focusedCol = ref(Math.min(1, maxColInRow(0)))
 const focusedIndex = computed(() => focusedRow.value * COLS + focusedCol.value)
 
 let inputLocked = false
+// Wheel/touch/keyboard navigation only makes sense once ScrollTrigger has
+// actually pinned the section — before that, the section is only
+// partially scrolled into view (the hero above it still showing), and if
+// these handlers captured/preventDefault()'d input anyway, that blocks
+// the very page scroll that would carry the user down to the point where
+// the pin engages, stranding them in that partial view until they
+// scrolled some other way. Set by the ScrollTrigger callbacks below.
+let isPinned = false
 
 function maxColInRow(row) {
   return Math.min(COLS - 1, work.length - 1 - row * COLS)
@@ -144,6 +152,8 @@ function lockInput() {
 }
 
 function onWheel(e) {
+  if (!isPinned) return // let normal page scroll carry it toward the pin point
+
   const absX = Math.abs(e.deltaX)
   const absY = Math.abs(e.deltaY)
 
@@ -173,6 +183,7 @@ function onWheel(e) {
 }
 
 function onKeydown(e) {
+  if (!isPinned) return
   const keys = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }
   const delta = keys[e.key]
   if (!delta || inputLocked) return
@@ -204,6 +215,7 @@ let dragBaseY = 0
 let suppressNextClick = false
 
 function onTouchStart(e) {
+  if (!isPinned) return
   const t = e.touches[0]
   dragStartX = t.clientX
   dragStartY = t.clientY
@@ -215,6 +227,7 @@ function onTouchStart(e) {
 }
 
 function onTouchMove(e) {
+  if (!isPinned) return
   const t = e.touches[0]
   const dx = t.clientX - dragStartX
   const dy = t.clientY - dragStartY
@@ -303,8 +316,10 @@ onMounted(() => {
     start: 'top top',
     end: '+=300',
     pin: true,
-    onEnter: animateToFocus,
-    onEnterBack: animateToFocus
+    onEnter: () => { isPinned = true; animateToFocus() },
+    onEnterBack: () => { isPinned = true; animateToFocus() },
+    onLeave: () => { isPinned = false },
+    onLeaveBack: () => { isPinned = false }
   })
 
   // Settle the stage at the starting cell immediately too, so there's a
