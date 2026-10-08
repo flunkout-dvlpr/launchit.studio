@@ -35,6 +35,11 @@ const notes = [
     to: '/notes/validation-ladder',
     title: 'The Validation Ladder',
     description: 'Telling real market validation apart from conviction — and why that, not building, is the actual obstacle.'
+  },
+  {
+    to: '/notes/free-work',
+    title: 'Do the work nobody asked for.',
+    description: "Why I keep building before there's a commitment — and what changed to make that stop being reckless."
   }
 ]
 </script>
