@@ -6,7 +6,7 @@
         <h1 class="font-display notes-index__title">Field notes.</h1>
         <p class="font-label notes-index__lede">
           Frameworks and lessons pulled from working across different startups and
-          teams — not project writeups, just the patterns worth writing down.
+          teams. Not project writeups, just the patterns worth writing down.
         </p>
       </header>
 
@@ -34,12 +34,12 @@ const notes = [
   {
     to: '/notes/validation-ladder',
     title: 'The Validation Ladder',
-    description: 'Telling real market validation apart from conviction — and why that, not building, is the actual obstacle.'
+    description: 'Telling real market validation apart from conviction, and why validation is the actual obstacle, not building.'
   },
   {
     to: '/notes/free-work',
     title: 'Do the work nobody asked for.',
-    description: "Why I keep building before there's a commitment — and what changed to make that stop being reckless."
+    description: "Why I keep building before there's a commitment, and what changed to make that stop being reckless."
   }
 ]
 </script>

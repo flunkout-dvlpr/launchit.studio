@@ -7,9 +7,10 @@
         <p class="font-label bb-header__lede">
           Every freelance and agency rule says the same thing: never build
           without a signed commitment. It was correct advice, for a long time,
-          because the thing being given away for free used to be genuinely
-          expensive. I keep breaking that rule anyway — not as a strategy, but
-          because AI collapsed the cost of what it was protecting against.
+          because the thing being given away for free used to be expensive. I
+          keep breaking that rule anyway. It isn't a strategy. AI collapsed the
+          cost of what the rule was protecting against, and that's the only
+          reason breaking it stopped being reckless.
         </p>
       </header>
 
@@ -19,15 +20,15 @@
         <h2 class="font-label bb-label">The rule, and why it used to be right</h2>
         <p class="font-label bb-body">
           Design and dev communities have spent close to two decades
-          campaigning against spec work — building something for a
-          prospective client before there's any commitment, on the chance it
-          leads somewhere. The argument is a good one: it undervalues the
-          work, it normalizes clients expecting something for nothing, and it
-          asks the person with the least leverage in the relationship to
-          absorb all the risk. For most of that time, the argument was also
-          just correct, because what was being given away for free was
-          genuinely expensive — real weeks of a real person's time, with no
-          guarantee any of it gets paid for.
+          campaigning against spec work: building something for a prospective
+          client before there's any commitment, on the chance it leads
+          somewhere. The argument is a good one. It undervalues the work, it
+          normalizes clients expecting something for nothing, and it asks the
+          person with the least leverage in the relationship to absorb all the
+          risk. For most of that time, the argument was also just correct,
+          because what was being given away for free was genuinely expensive:
+          real weeks of a real person's time, with no guarantee any of it gets
+          paid for.
         </p>
       </section>
 
@@ -37,15 +38,15 @@
         <h2 class="font-label bb-label">What actually changed</h2>
         <p class="font-label bb-body">
           I've broken that rule more than once, and it's paid off more than
-          once. Not because the rule was wrong — because the cost it was
-          protecting against collapsed. With AI doing most of the heavy
-          lifting, and a tech stack I've reused project after project (the
-          same Quasar/Vue scaffolding, the same AWS deploy pattern, the same
-          Lambda conventions), building 70% of a real rebuild doesn't take
-          weeks anymore. It takes an evening or two, sometimes a full day. At
-          that price, refusing to build before being asked isn't protecting
-          your time anymore — it's just an old rule nobody re-checked after
-          the thing it was pricing got cheap.
+          once. The rule itself wasn't wrong. The cost it was protecting
+          against just collapsed. With AI doing most of the heavy lifting, and
+          a tech stack I've reused project after project (the same Quasar/Vue
+          scaffolding, the same AWS deploy pattern, the same Lambda
+          conventions), building 70% of a real rebuild doesn't take weeks
+          anymore. It takes an evening or two, sometimes a full day. At that
+          price, refusing to build before being asked isn't protecting your
+          time anymore. It's just an old rule nobody re-checked after the
+          thing it was pricing got cheap.
         </p>
       </section>
 
@@ -54,20 +55,20 @@
       <section class="reveal">
         <h2 class="font-label bb-label">Where this actually started</h2>
         <p class="font-label bb-body">
-          None of this started as a strategy. I went through a real stretch —
-          a drought, honestly — where building had quietly dropped out of my
-          life. Most days were just the 9-to-5 at Left Field Labs, with
-          whatever spark usually got me building something on the side gone
-          missing. Impact Hub Houston's accelerator program is what snapped
-          me out of it, though not in the way it was supposed to. I came out
-          of it genuinely loving the startup community, and open to finding
-          the right thing to build around someday — but the real realization
-          was simpler than that: what I actually love is building, full
-          stop. It doesn't have to be a company. It doesn't have to make
-          money. Most of the time I'm offering to help for free, the same way
-          the Ideal Instruction conversation actually started — not a pitch,
-          just an offer. The paid work that's come out of that has been a
-          byproduct of it, never the reason I was doing it.
+          None of this started as a strategy. I went through a real stretch, a
+          drought, where building had quietly dropped out of my life. Most
+          days were just the 9-to-5 at Left Field Labs, with whatever spark
+          usually got me building something on the side gone missing. Impact
+          Hub Houston's accelerator program is what snapped me out of it,
+          though not in the way it was supposed to. I came out of it loving
+          the startup community, and open to finding the right thing to build
+          around someday. But the real realization was simpler than that:
+          what I actually love is building, full stop. It doesn't have to be
+          a company. It doesn't have to make money. Most of the time I'm
+          offering to help for free, the same way the Ideal Instruction
+          conversation started. Not a pitch. Just an offer. The paid
+          work that's come out of that has been a byproduct of it, never the
+          reason I was doing it.
         </p>
       </section>
 
@@ -75,7 +76,11 @@
 
       <section class="reveal">
         <span class="pill-tag pill-tag--teal tilt-left bb-case__status">Two that said yes</span>
-        <h2 class="font-display bb-case__title">Ideal Instruction &amp; Home Financing Center</h2>
+        <h2 class="font-display bb-case__title">
+          <a href="https://www.ideal-instruction.com" target="_blank" rel="noopener noreferrer" @click="trackEvent('outbound_click', { label: 'Ideal Instruction', url: 'https://www.ideal-instruction.com' })">Ideal Instruction</a>
+          &amp;
+          <a href="https://www.homefinancingcenter.com" target="_blank" rel="noopener noreferrer" @click="trackEvent('outbound_click', { label: 'Home Financing Center', url: 'https://www.homefinancingcenter.com' })">Home Financing Center</a>
+        </h2>
         <p class="font-label bb-body">
           Both started the same way: a real audit of the existing site, then
           most of the actual rebuild, before either client had committed to
@@ -83,30 +88,31 @@
           including its video showroom; a WordPress-to-Vue rebuild for Home
           Financing Center, including its mortgage calculator and quiz
           dialogs. Each one took maybe one or two evenings, sometimes a full
-          day. Both converted into real, paid engagements. Neither one
-          happened because I pitched well — they happened because there was
-          almost nothing left to imagine. The thing mostly already existed,
-          and saying yes just meant keeping it.
+          day. Both converted into real, paid engagements. I don't think
+          either one happened because I pitched well. There was almost
+          nothing left to imagine by the time we talked. The thing mostly
+          already existed, and saying yes just meant keeping it.
         </p>
       </section>
 
       <div class="dimension-line" />
 
       <section class="reveal">
-        <span class="pill-tag pill-tag--coral tilt-right bb-case__status">The one that hasn't — yet</span>
-        <h2 class="font-display bb-case__title">Steelmill Gym</h2>
+        <span class="pill-tag pill-tag--coral tilt-right bb-case__status">Still an open one</span>
+        <h2 class="font-display bb-case__title">
+          <a href="https://d2o6sntgwqzr70.cloudfront.net" target="_blank" rel="noopener noreferrer" @click="trackEvent('outbound_click', { label: 'Steelmill Gym', url: 'https://d2o6sntgwqzr70.cloudfront.net' })">Steelmill Gym</a>
+        </h2>
         <p class="font-label bb-body">
-          Same approach, same effort, and it hasn't converted. Not because
-          the work wasn't good — the coaches who actually run the gym day to
-          day were genuinely into it. The owner, who isn't really present in
-          the day-to-day, wasn't. The honest version of his position is
-          something close to "we're already making money, why bother." That's
-          the real lesson here, not a disappointing footnote: the cost of
-          building the thing dropping to almost nothing doesn't manufacture
-          urgency in someone who was never going to feel the pain. That's the
-          exact gap the
+          Same approach, same effort, and it hasn't converted. The work was
+          good. The coaches who actually run the gym day to day were into it.
+          The owner, who isn't really present in the day-to-day, wasn't. The
+          honest version of his position is something close to "we're already
+          making money, why bother." That's the real lesson here, not a
+          disappointing footnote: the cost of building the thing dropping to
+          almost nothing doesn't manufacture urgency in someone who was never
+          going to feel the pain. That's the exact gap the
           <router-link to="/notes/validation-ladder" @click="trackEvent('notes_cross_link_click', { from: 'free-work', to: 'validation-ladder' })">Validation Ladder's</router-link>
-          segment table is built to catch — loving the product and being the
+          segment table is built to catch. Loving the product and being the
           person who feels enough pain to say yes are two different people,
           and no amount of free, well-built work closes that gap by itself.
         </p>
@@ -118,9 +124,9 @@
         <p class="font-display bb-closing__statement">Build it before they ask. The downside stopped being expensive.</p>
         <p class="font-label bb-closing__note">
           This isn't a growth hack, and it won't manufacture urgency nobody
-          already felt — Steelmill is proof of that. But when building
-          stopped being the expensive part, refusing to do it first stopped
-          being the safe choice too.
+          already felt. Steelmill is proof of that. But when building stopped
+          being the expensive part, refusing to do it first stopped being the
+          safe choice too.
         </p>
         <div class="bb-closing__ctas">
           <router-link
@@ -132,7 +138,7 @@
             href="mailto:hello@launchit.studio?subject=Let%27s%20build%20something"
             class="bb-closing__email font-label"
             @click="trackEvent('contact_click', { location: 'notes-free-work' })"
-          >Or just email me — hello@launchit.studio</a>
+          >Or just email me: hello@launchit.studio</a>
         </div>
       </section>
     </div>
@@ -223,6 +229,18 @@ onMounted(() => {
   font-size: 1.4rem;
   font-weight: 600;
   margin: 0 0 1rem;
+
+  a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-decoration-color: rgba(30, 43, 60, 0.3);
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: var(--coral);
+      text-decoration-color: var(--coral);
+    }
+  }
 }
 
 .bb-closing {

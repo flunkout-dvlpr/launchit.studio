@@ -9,7 +9,7 @@
           A canvas and a segment list don't prove anything by themselves. They just
           make it obvious which boxes are filled with real evidence and which are
           filled with a good guess. For most ideas at the start, almost every block
-          below starts in the second category — that's fine, as long as it's
+          below starts in the second category. That's fine, as long as it's
           labeled honestly instead of treated like proof.
         </p>
       </header>
@@ -103,7 +103,7 @@
       </section>
 
       <p class="vt-persist-note font-label">
-        <span>Saved automatically in your browser as you type — nothing is sent anywhere.</span>
+        <span>Saved automatically in your browser as you type. Nothing is sent anywhere.</span>
         <span class="vt-persist-note__actions">
           <button type="button" class="vt-export" @click="exportPdf">Export as PDF ↓</button>
           <button type="button" class="vt-export" @click="exportMarkdown">Export as Markdown ↓</button>
@@ -132,16 +132,16 @@
               <li>"What did you end up paying, roughly, across everything?"</li>
               <li>"What was the hardest or most frustrating part of the whole thing?"</li>
               <li>"Did you look for any kind of solution anywhere? What did you find, if anything?"</li>
-              <li><b>"Do you know anyone else dealing with this right now? Could you introduce me?"</b> — the strongest closing question. A real referral costs them something, so it's a real signal, where a compliment costs nothing.</li>
+              <li><b>"Do you know anyone else dealing with this right now? Could you introduce me?"</b> The strongest closing question. A real referral costs them something, so it's a real signal, where a compliment costs nothing.</li>
             </ul>
           </div>
           <div class="vt-qa__col vt-qa__col--bad">
             <h3 class="font-label vt-qa__heading">Feel like validation, aren't</h3>
             <ul class="vt-qa__list">
-              <li>"Do you think something like this would be helpful?" — hypothetical, invites politeness.</li>
-              <li>"Would you use a product that did X?" — leading, pitches the solution before you've heard the problem.</li>
-              <li>"Is this a problem you have?" — yes or no, easy to agree to just to be agreeable.</li>
-              <li>"How much would you pay for this?" — people are bad at pricing a hypothetical. Ask what they actually paid last time instead.</li>
+              <li>"Do you think something like this would be helpful?" Hypothetical, invites politeness.</li>
+              <li>"Would you use a product that did X?" Leading, pitches the solution before you've heard the problem.</li>
+              <li>"Is this a problem you have?" Yes or no, easy to agree to just to be agreeable.</li>
+              <li>"How much would you pay for this?" People are bad at pricing a hypothetical. Ask what they actually paid last time instead.</li>
             </ul>
           </div>
         </div>
@@ -159,7 +159,7 @@
           that already happened, not something hypothetical.
         </p>
         <ol class="vt-steps">
-          <li><b>Screener:</b> confirm the respondent actually matches the target segment, and exclude anyone who doesn't.</li>
+          <li><b>Screener:</b> confirm the respondent matches the target segment, and exclude anyone who doesn't.</li>
           <li><b>Behavior, as a checklist, not a hypothetical:</b> "Which of these have you personally done or paid for?" with real options, not "would you."</li>
           <li><b>Channel, open text:</b> "How did you find the people or tools you used?"</li>
           <li><b>Pain ranking:</b> which part was most frustrating, as a ranked list of real sub-problems.</li>
@@ -173,11 +173,11 @@
       <section class="reveal">
         <h2 class="font-label vt-label">Further reading</h2>
         <ul class="vt-reading">
-          <li><b>The Mom Test</b> — Rob Fitzpatrick. Short, and built entirely around this exact problem.</li>
-          <li><b>Testing Business Ideas</b> — David Bland and Alexander Osterwalder. A catalog of experiments ranked by cost and evidence strength — basically the ladder expanded into a full book.</li>
-          <li><b>Business Model Generation</b> — Alexander Osterwalder and Yves Pigneur. The original business model canvas, and the book that's actually behind the fill-in canvas above.</li>
-          <li><b>Running Lean</b> — Ash Maurya. The Lean Canvas, a startup-specific adaptation of the same canvas, plus the problem interview and solution interview scripts it's built around.</li>
-          <li><b>Talking to Humans</b> — Giff Constable. Short and practical, a good next read once the first few interviews are booked.</li>
+          <li><b>The Mom Test</b>: Rob Fitzpatrick. Short, and built entirely around this exact problem.</li>
+          <li><b>Testing Business Ideas</b>: David Bland and Alexander Osterwalder. A catalog of experiments ranked by cost and evidence strength, basically the ladder expanded into a full book.</li>
+          <li><b>Business Model Generation</b>: Alexander Osterwalder and Yves Pigneur. The original business model canvas, and the book behind the fill-in canvas above.</li>
+          <li><b>Running Lean</b>: Ash Maurya. The Lean Canvas, a startup-specific adaptation of the same canvas, plus the problem interview and solution interview scripts it's built around.</li>
+          <li><b>Talking to Humans</b>: Giff Constable. Short and practical, a good next read once the first few interviews are booked.</li>
         </ul>
       </section>
 
@@ -195,7 +195,7 @@
             href="mailto:hello@launchit.studio?subject=Validation%20sanity%20check"
             class="vt-closing__email font-label"
             @click="trackEvent('contact_click', { location: 'notes-validation-toolkit' })"
-          >Or walk through yours with me — hello@launchit.studio</a>
+          >Or walk through yours with me: hello@launchit.studio</a>
         </div>
       </section>
     </div>
@@ -209,7 +209,7 @@
          the @media print rule below. -->
     <div class="vt-print" aria-hidden="true">
       <h1 class="vt-print__title">Validation Toolkit</h1>
-      <p class="vt-print__date">Filled in {{ printDate }} — launchit.studio/notes/validation-ladder/toolkit</p>
+      <p class="vt-print__date">Filled in {{ printDate }}. launchit.studio/notes/validation-ladder/toolkit</p>
 
       <h2 class="vt-print__section-title">Lean Canvas</h2>
       <div v-for="row in canvas" :key="`print-${row.block}`" class="vt-print__block">
@@ -262,11 +262,11 @@ const canvas = reactive([
   { block: 'Customer segments', prompt: 'Who has this problem badly enough to act?', answer: '', status: 'Unknown' },
   { block: 'Unique value proposition', prompt: 'Why would they choose this over doing nothing, or over the workaround they already use?', answer: '', status: 'Unknown' },
   { block: 'Solution', prompt: "What's the smallest version that addresses the problem?", answer: '', status: 'Unknown' },
-  { block: 'Channels', prompt: 'How would the right people actually find out this exists?', answer: '', status: 'Unknown' },
+  { block: 'Channels', prompt: 'How would the right people find out this exists?', answer: '', status: 'Unknown' },
   { block: 'Revenue streams', prompt: 'Who pays, how much, and why would they keep paying?', answer: '', status: 'Unknown' },
   { block: 'Cost structure', prompt: 'What does it cost to deliver this, including the ongoing human labor, not just the build?', answer: '', status: 'Unknown' },
-  { block: 'Key metrics', prompt: 'What number would actually prove this is working, and is anything measuring it yet?', answer: '', status: 'Unknown' },
-  { block: 'Unfair advantage', prompt: "What's genuinely hard for someone else to copy?", answer: '', status: 'Unknown' }
+  { block: 'Key metrics', prompt: 'What number would prove this is working, and is anything measuring it yet?', answer: '', status: 'Unknown' },
+  { block: 'Unfair advantage', prompt: "What's hard for someone else to copy?", answer: '', status: 'Unknown' }
 ])
 
 // User-added rows only — the one example row in the template is static

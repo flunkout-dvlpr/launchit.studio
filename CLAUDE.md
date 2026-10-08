@@ -109,6 +109,17 @@ what we'll walk through / after the session) as the schema for the template.
 (Domain and naming are resolved — see "Name & domain" above. Do not re-litigate
 these or default to a different name/URL structure.)
 
+## Writing style — /notes content (standing rule)
+Applies to everything under `client/src/pages/notes/` (and any future Notes
+piece): never use em-dashes, and strip any other phrasing that reads as an
+obvious AI tell — e.g. the "it's not X, it's Y" / "not because A, but because
+B" contrastive construction, filler intensifiers like "genuinely," "actually,"
+"honestly" used reflexively rather than because they're doing real work, and
+overly tidy rule-of-three lists. Read each piece back and cut anything that
+sounds templated rather than like a person actually talking. This is a
+standing rule, not a one-time cleanup — apply it by default to new Notes
+writing, don't wait to be asked again.
+
 ## Definition of done for v1
 - Home, About, Framework, and Prep Artifacts pages live at launchit.studio/sessions
 - One prep artifact (cycle 1, social content manager) rendered as the template
