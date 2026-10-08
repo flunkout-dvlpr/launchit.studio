@@ -76,12 +76,16 @@ const EDGE_RESISTANCE = 0.35
 
 // Logical grid shape (COLS) stays fixed across devices so neighbor
 // relationships never reshuffle — only the pixel size of each cell scales
-// down for narrower viewports, via $q.screen (already reactive).
+// with the real window width, via $q.screen (already reactive). Continuous
+// (clamped) instead of three fixed breakpoints: a window width that fell
+// between the old tiers still got a flat size sized for a wider/narrower
+// window than it actually was, leaving neighbor cards only partially
+// fitting (clipped) before any interaction even happened.
 const cellSize = computed(() => {
   const vw = $q.screen.width
-  if (vw < 480) return { w: Math.min(vw - 64, 300), h: 360, gap: 16 }
-  if (vw < 900) return { w: 340, h: 400, gap: 22 }
-  return { w: 400, h: 440, gap: 32 }
+  const w = Math.round(gsap.utils.clamp(260, 420, vw * 0.32))
+  const gap = Math.round(gsap.utils.clamp(14, 32, vw * 0.022))
+  return { w, h: Math.round(w * 1.1), gap }
 })
 
 const focusedRow = ref(0)
@@ -143,7 +147,12 @@ function onWheel(e) {
   const absX = Math.abs(e.deltaX)
   const absY = Math.abs(e.deltaY)
 
-  if (absX > absY) {
+  // A 1.3x margin, not a bare absX > absY — real trackpad input is rarely
+  // perfectly axis-aligned, and deciding per-event with no bias at all
+  // meant a mostly-vertical gesture could occasionally flip to
+  // "horizontal" for one tick on ordinary sensor noise, misfiring a
+  // column change mid-scroll.
+  if (absX > absY * 1.3) {
     // Horizontal input (trackpad shift-scroll) never conflicts with the
     // page's own vertical scroll, so it's always safe to capture.
     e.preventDefault()
@@ -185,6 +194,14 @@ let dragStartX = 0
 let dragStartY = 0
 let dragBaseX = 0
 let dragBaseY = 0
+// The grid visually shifts under the finger during a drag, so whatever
+// card ends up under it at lift-off is rarely the one the gesture was
+// "about" — without this, the browser's synthesized click (fired after
+// almost any touchend, drag or not) lands on that card and calls
+// focusIndexDirect(), jumping again to a second, usually wrong, cell right
+// after the drag's own moveFocus() already landed on the right one. That's
+// the "ends up somewhere unexpected depending on where I touched" bug.
+let suppressNextClick = false
 
 function onTouchStart(e) {
   const t = e.touches[0]
@@ -221,6 +238,17 @@ function onTouchMove(e) {
 
 function onTouchEnd(e) {
   if (!dragAxis || (dragAxis === 'y' && dragBlocked)) return
+
+  // Any real drag (past the 8px threshold in onTouchMove, which is the
+  // only way dragAxis gets set) is about to trigger its own navigation
+  // below, or a snap-back — either way, the click the browser is about to
+  // synthesize from this same touch has to be swallowed, or it re-fires
+  // navigation a second time against whatever card the grid shift left
+  // under the finger. Cleared a tick later so it only ever blocks the one
+  // click this specific gesture produces.
+  suppressNextClick = true
+  gsap.delayedCall(0.35, () => { suppressNextClick = false })
+
   const t = e.changedTouches[0]
   const delta = dragAxis === 'x' ? t.clientX - dragStartX : t.clientY - dragStartY
 
@@ -235,6 +263,11 @@ function onTouchEnd(e) {
 }
 
 function onCardClick(item, i, e) {
+  if (suppressNextClick) {
+    suppressNextClick = false
+    e.preventDefault()
+    return
+  }
   // Clicking a peeking (non-focused) neighbor brings it into focus instead
   // of navigating — the click "arrives" at that card rather than leaving
   // the page, matching how clicking around a map recenters instead of
