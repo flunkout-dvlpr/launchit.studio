@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { gsap } from 'boot/gsap'
 import { usePrefersReducedMotion } from 'src/composables/usePrefersReducedMotion'
 import { trackEvent } from 'boot/analytics'
@@ -51,14 +51,18 @@ function slugify(title) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
-// { import: 'default' } isn't available on this project's Vite version
-// (2.9) — eager glob results come back as full module namespace objects
-// here, unwrapped by hand instead.
-const screenshotFiles = import.meta.glob('../assets/gallery/*.webp', { eager: true })
-const screenshots = {}
+// On this project's Vite version (2.9), { eager: true } does NOT actually
+// resolve asset globs synchronously — each value here is still a lazy
+// `() => import(...)` loader, same as without the option. Treating it as
+// lazy (which is what it really is) and resolving everything up front
+// into a reactive map, so the template swaps in each image as it loads.
+const screenshotFiles = import.meta.glob('../assets/gallery/*.webp')
+const screenshotEntries = Object.entries(screenshotFiles)
+const screenshots = reactive({})
 for (const item of work) {
-  const match = screenshotFiles[`../assets/gallery/${slugify(item.title)}.webp`]
-  if (match) screenshots[item.title] = match.default
+  const filename = `${slugify(item.title)}.webp`
+  const entry = screenshotEntries.find(([key]) => key.endsWith(`/${filename}`))
+  if (entry) entry[1]().then((mod) => { screenshots[item.title] = mod.default })
 }
 
 onMounted(() => {
