@@ -17,6 +17,7 @@
     "cutouts": "node scripts/generate-cutouts.js",
     "avatar-marks": "node scripts/generate-avatar-marks.js",
     "gallery-shots": "node scripts/generate-gallery-screenshots.js",
+    "og-image": "node scripts/generate-og-image.js",
     "deploy": "node deploy.js"
   },
   "dependencies": {
