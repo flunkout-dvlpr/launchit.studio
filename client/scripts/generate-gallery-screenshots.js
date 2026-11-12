@@ -34,6 +34,8 @@ const DEBUG_PORT = 9333
 
 // Per-project overrides for projects whose default capture (wait ~4s, then
 // shoot) didn't produce a usable screenshot.
+//   captureUrl   — shoot this URL instead of the project's link (e.g. a
+//                  marketing landing page when the root is a login screen)
 //   waitMs       — how long to wait after navigation before interacting/shooting
 //   pressEscape  — dismiss an onboarding/welcome dialog that opens on load
 //   clickText    — click the first element whose text matches, to reach a
@@ -42,19 +44,18 @@ const CAPTURE_OPTIONS = {
   Circles: { waitMs: 9000 },
   'Daily Meditations': { waitMs: 9000 },
   Clika: { waitMs: 11000 },
-  'Pump Log': { waitMs: 9000 },
+  // The site's root is a phone-number sign-in, so capture its marketing
+  // landing page instead.
+  'Pump Log': { waitMs: 6000, captureUrl: 'https://pumplog.launchit.studio/about/' },
   'My Fit Foods Meal Planner': { waitMs: 5000, pressEscape: true },
   'Home Financing Center': { waitMs: 5000, clickText: 'Skip' },
   RealCost: { waitMs: 5000, clickText: 'Skip' },
-  // No reachable "deck" view without an actual multiplayer session (Create
-  // requires a typed lobby name, then a second player to join) — the lobby
-  // card itself is a real, reasonable "another view," and just needed a
-  // real wall-clock wait instead of --virtual-time-budget to render at all.
+  // The link is the hash-routed /#/welcome landing page. Needs a real
+  // wall-clock wait instead of --virtual-time-budget to render at all.
   'La Lotería': { waitMs: 6000 },
-  // Login screen only offers phone-number auth — "Try the demo" lands on
-  // the real signed-in dashboard, which then opens a one-time "Got it!"
-  // onboarding tooltip over it.
-  MealReps: { waitMs: 4500, clickSequence: [{ text: 'Try the demo', waitMs: 3000 }, { text: 'Got it', waitMs: 800 }] }
+  // The site's root redirects to a phone-number login, so capture the
+  // marketing landing page instead (hash-routed, hence /#/welcome).
+  MealReps: { waitMs: 5000, captureUrl: 'https://mealreps.launchit.studio/#/welcome' }
 }
 
 function slugify(title) {
@@ -160,7 +161,17 @@ async function captureOne(item, port) {
 
   try {
     await send('Page.enable')
-    await send('Page.navigate', { url: item.link })
+    // --window-size includes the browser's own chrome (~140px of height), so
+    // without this the page viewport is shorter than CAPTURE_HEIGHT and the
+    // shot comes out the wrong aspect ratio for the gallery card (900x633),
+    // which then crops the sides to fit.
+    await send('Emulation.setDeviceMetricsOverride', {
+      width: CAPTURE_WIDTH,
+      height: CAPTURE_HEIGHT,
+      deviceScaleFactor: 1,
+      mobile: false
+    })
+    await send('Page.navigate', { url: opts.captureUrl || item.link })
     await new Promise((r) => setTimeout(r, opts.waitMs || 4000))
 
     if (opts.pressEscape) {

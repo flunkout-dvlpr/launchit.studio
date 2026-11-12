@@ -68,7 +68,7 @@ const modes = [
   { value: 'filmstrip', label: 'Film Strip' },
   { value: 'gallery', label: 'Gallery' }
 ]
-const mode = ref('zoom')
+const mode = ref('gallery')
 
 function setMode(value) {
   mode.value = value

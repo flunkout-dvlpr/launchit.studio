@@ -10,25 +10,35 @@
       class="work-gallery__card"
       @click="item.link && trackEvent('outbound_click', { label: item.title, url: item.link })"
     >
-      <img
-        v-if="screenshots[item.title]"
-        :src="screenshots[item.title]"
-        :alt="`${item.title} landing page`"
-        class="work-gallery__img"
-        loading="lazy"
-      />
-      <!-- No live link (Project Switcher) or no captured screenshot yet —
-           same icon-on-a-field treatment instead of a broken image. -->
-      <div v-else class="work-gallery__img work-gallery__img--fallback" aria-hidden="true">
-        <span class="work-gallery__fallback-icon">{{ item.icon }}</span>
+      <!-- Browser-window frame: a tab bar with a URL pill sits above the
+           screenshot so the page's own cut-off edges read as a viewport
+           instead of a crop. -->
+      <div class="work-gallery__bar" aria-hidden="true">
+        <span class="work-gallery__dots"><i /><i /><i /></span>
+        <span class="font-label work-gallery__url">{{ displayUrl(item.link) }}</span>
       </div>
 
-      <div class="work-gallery__scrim" />
+      <div class="work-gallery__shot">
+        <img
+          v-if="screenshots[item.title]"
+          :src="screenshots[item.title]"
+          :alt="`${item.title} landing page`"
+          class="work-gallery__img"
+          loading="lazy"
+        />
+        <!-- No live link (Project Switcher) or no captured screenshot yet —
+             same icon-on-a-field treatment instead of a broken image. -->
+        <div v-else class="work-gallery__img work-gallery__img--fallback" aria-hidden="true">
+          <span class="work-gallery__fallback-icon">{{ item.icon }}</span>
+        </div>
 
-      <div class="work-gallery__info">
-        <span v-if="item.icon" class="work-gallery__icon" aria-hidden="true">{{ item.icon }}</span>
-        <h2 class="font-display work-gallery__title">{{ item.title }}</h2>
-        <p class="font-label work-gallery__desc">{{ item.description }}</p>
+        <div class="work-gallery__scrim" />
+
+        <div class="work-gallery__info">
+          <span v-if="item.icon" class="work-gallery__icon" aria-hidden="true">{{ item.icon }}</span>
+          <h2 class="font-display work-gallery__title">{{ item.title }}</h2>
+          <p class="font-label work-gallery__desc">{{ item.description }}</p>
+        </div>
       </div>
     </component>
   </section>
@@ -43,6 +53,18 @@ import work from 'src/data/work.js'
 
 const prefersReducedMotion = usePrefersReducedMotion()
 const root = ref(null)
+
+// Address-bar text for the frame: host + path, no scheme/www/trailing slash
+// or hash route (e.g. "launchit.studio/mac").
+function displayUrl(link) {
+  if (!link) return 'local tool'
+  try {
+    const u = new URL(link)
+    return (u.host.replace(/^www\./, '') + u.pathname).replace(/\/$/, '')
+  } catch {
+    return link
+  }
+}
 
 // Same slug rule scripts/generate-gallery-screenshots.js uses to name its
 // output files, so a title here always resolves to the file that script
@@ -96,19 +118,70 @@ onMounted(() => {
 
 .work-gallery__card {
   position: relative;
-  display: block;
-  aspect-ratio: 900 / 633;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(62, 124, 166, 0.35);
   background: var(--navy);
+  box-shadow: 0 6px 18px rgba(14, 18, 24, 0.14);
   text-decoration: none;
   color: var(--paper);
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     border-color: var(--coral);
+    box-shadow: 0 10px 24px rgba(14, 18, 24, 0.22);
   }
+}
+
+// Tab bar of the browser frame.
+.work-gallery__bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 30px;
+  padding: 0 0.75rem;
+  background: #1a2433;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.work-gallery__dots {
+  display: flex;
+  gap: 5px;
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.work-gallery__url {
+  flex: 1;
+  min-width: 0;
+  max-width: 70%;
+  margin: 0 auto;
+  padding: 2px 10px;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// The screenshot area keeps the capture's own ratio (900x633), so the image
+// is shown whole rather than cropped to a different card shape.
+.work-gallery__shot {
+  position: relative;
+  aspect-ratio: 900 / 633;
+  overflow: hidden;
 }
 
 .work-gallery__img {

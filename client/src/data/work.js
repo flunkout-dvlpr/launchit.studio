@@ -3,10 +3,10 @@
 // not just inferred from a deploy-state.json — a handful legitimately have
 // no confirmed live instance, hence no link.
 //
-// Order: Blast to the Past, Circles, and MealReps lead the list (most
-// complete/technically ambitious builds), ahead of every other webapp/
-// website/device entry — a deliberate placement, not alphabetical or
-// chronological.
+// Order: Circles, Pump Log, Daily Meditations, Steelmill Gym, Home Financing
+// Center, Ideal Instruction, 10th Fitness, MealReps, Clika, Sixty-Four,
+// La Lotería, and RealCost lead the list, ahead of every other entry — a
+// deliberate placement, not alphabetical or chronological.
 //
 // type: 'webapp' for anything with real interactivity (accounts, data
 // entry, generation, gameplay, tracking); 'website' for informational/
@@ -23,13 +23,6 @@
 // 142 characters so every card stays the same size.
 export default [
   {
-    title: 'Blast to the Past',
-    description: "Drag a dial to any year from 1965-2020, get that year's Billboard Hot 100, and export it as a real Spotify playlist.",
-    link: 'https://blast.launchit.studio',
-    type: 'webapp',
-    icon: '🎵'
-  },
-  {
     title: 'Circles',
     description: "An explorable grid of Mac Miller's discography — arrow or swipe through eras and alter egos, each album its own visual world.",
     link: 'https://launchit.studio/mac/',
@@ -37,25 +30,11 @@ export default [
     icon: '💿'
   },
   {
-    title: 'La Lotería',
-    description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
-    link: 'https://d1g478ncyw9arv.cloudfront.net',
+    title: 'Pump Log',
+    description: 'Simple workout logging app for tracking lifts consistently, session to session.',
+    link: 'https://pumplog.launchit.studio/',
     type: 'webapp',
-    icon: '🎴'
-  },
-  {
-    title: 'Sixty-Four',
-    description: 'A homemade 64×64 LED display run by an ESP32 and a Raspberry Pi: now-playing, clocks, weather, live scores and storm alerts.',
-    link: 'https://sixtyfour.launchit.studio',
-    type: 'device',
-    icon: '💡'
-  },
-  {
-    title: 'MealReps',
-    description: 'Macro-first meal prep PWA — build an ingredient library, compose meals, plan full days, and generate a shopping list.',
-    link: 'https://mealreps.launchit.studio',
-    type: 'webapp',
-    icon: '🍱'
+    icon: '🏋️‍♂️'
   },
   {
     title: 'Daily Meditations',
@@ -70,13 +49,6 @@ export default [
     link: 'https://d2o6sntgwqzr70.cloudfront.net',
     type: 'website',
     icon: '🏋️'
-  },
-  {
-    title: 'My Fit Foods Meal Planner',
-    description: "Builds a personalized multi-day meal plan from My Fit Foods' real menu to hit your macros, with one-click ordering.",
-    link: 'https://d2lljxs9lrcc7q.cloudfront.net',
-    type: 'webapp',
-    icon: '🍽️'
   },
   {
     title: 'Home Financing Center',
@@ -100,11 +72,11 @@ export default [
     icon: '💪'
   },
   {
-    title: 'Digital Bulletin Board',
-    description: 'Replaces physical city bulletin boards — publishes and cycles public meeting agendas, with a kiosk display mode for large screens.',
-    link: 'https://d1r6yvp4doepfd.cloudfront.net/#/',
+    title: 'MealReps',
+    description: 'Macro-first meal prep PWA — build an ingredient library, compose meals, plan full days, and generate a shopping list.',
+    link: 'https://mealreps.launchit.studio',
     type: 'webapp',
-    icon: '📌'
+    icon: '🍱'
   },
   {
     title: 'Clika',
@@ -114,6 +86,20 @@ export default [
     icon: '⚽'
   },
   {
+    title: 'Sixty-Four',
+    description: 'A homemade 64×64 LED display run by an ESP32 and a Raspberry Pi: now-playing, clocks, weather, live scores and storm alerts.',
+    link: 'https://sixtyfour.launchit.studio',
+    type: 'device',
+    icon: '💡'
+  },
+  {
+    title: 'La Lotería',
+    description: 'Multiplayer Lotería, the Mexican bingo game, playable in real time with friends.',
+    link: 'https://d1g478ncyw9arv.cloudfront.net/#/welcome',
+    type: 'webapp',
+    icon: '🎴'
+  },
+  {
     title: 'RealCost',
     description: 'Shows the real all-in numbers behind a home purchase.',
     link: 'https://d2d7tho10yuty7.cloudfront.net',
@@ -121,18 +107,32 @@ export default [
     icon: '🧮'
   },
   {
+    title: 'Blast to the Past',
+    description: "Drag a dial to any year from 1965-2020, get that year's Billboard Hot 100, and export it as a real Spotify playlist.",
+    link: 'https://blast.launchit.studio',
+    type: 'webapp',
+    icon: '🎵'
+  },
+  {
+    title: 'My Fit Foods Meal Planner',
+    description: "Builds a personalized multi-day meal plan from My Fit Foods' real menu to hit your macros, with one-click ordering.",
+    link: 'https://d2lljxs9lrcc7q.cloudfront.net',
+    type: 'webapp',
+    icon: '🍽️'
+  },
+  {
+    title: 'Digital Bulletin Board',
+    description: 'Replaces physical city bulletin boards — publishes and cycles public meeting agendas, with a kiosk display mode for large screens.',
+    link: 'https://d1r6yvp4doepfd.cloudfront.net/#/',
+    type: 'webapp',
+    icon: '📌'
+  },
+  {
     title: 'PermitPulse',
     description: "Open Data Day datathon entry turning Sugar Land's building-permit data into a map of where the city is growing.",
     link: 'https://d3300qf46cmy2c.cloudfront.net',
     type: 'webapp',
     icon: '🏗️'
-  },
-  {
-    title: 'Pump Log',
-    description: 'Simple workout logging app for tracking lifts consistently, session to session.',
-    link: 'https://dq0ag6mos5oil.cloudfront.net',
-    type: 'webapp',
-    icon: '🏋️‍♂️'
   },
   {
     title: 'Project Switcher',
