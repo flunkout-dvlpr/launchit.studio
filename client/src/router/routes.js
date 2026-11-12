@@ -11,7 +11,8 @@ const routes = [
       { path: 'notes', name: 'notes-index', component: () => import('pages/notes/NotesIndexPage.vue') },
       { path: 'notes/validation-ladder', name: 'notes-validation-ladder', component: () => import('pages/notes/ValidationLadderPage.vue') },
       { path: 'notes/validation-ladder/toolkit', name: 'notes-validation-toolkit', component: () => import('pages/notes/ValidationToolkitPage.vue') },
-      { path: 'notes/free-work', name: 'notes-free-work', component: () => import('pages/notes/FreeWorkPage.vue') }
+      { path: 'notes/free-work', name: 'notes-free-work', component: () => import('pages/notes/FreeWorkPage.vue') },
+      { path: 'notes/build-the-smallest-thing', name: 'notes-smallest-thing', component: () => import('pages/notes/SmallestThingPage.vue') }
     ]
   },
 

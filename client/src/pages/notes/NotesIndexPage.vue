@@ -32,6 +32,11 @@ import { trackEvent } from 'boot/analytics'
 
 const notes = [
   {
+    to: '/notes/build-the-smallest-thing',
+    title: 'Build the smallest thing that works.',
+    description: 'A short guide for first-time builders: how to prompt clearly, add one layer at a time, and get unstuck. Includes copy-ready prompt templates.'
+  },
+  {
     to: '/notes/validation-ladder',
     title: 'The Validation Ladder',
     description: 'Telling real market validation apart from conviction, and why validation is the actual obstacle, not building.'
