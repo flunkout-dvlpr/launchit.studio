@@ -95,12 +95,14 @@ onMounted(() => {
     gsap.from(navEl.value.children, { x: 40, autoAlpha: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' })
   }
 
-  // Same auto-play-on-landing rocket flight as SessionsLayout — now that
-  // this layout also wraps /notes/*, it needs the same path check Sessions
-  // uses: only autoplay on the true root landing, not every page under
-  // here. Delayed to start after the wordmark's own entrance tween above
-  // finishes settling rather than clashing with it.
-  if (router.currentRoute.value.path === '/') {
+  // Same auto-play-on-landing rocket flight as SessionsLayout. Plays when
+  // someone lands on the root or on /notes or any note (e.g. a shared link
+  // straight to a post). This only runs when the layout mounts, so moving
+  // between pages inside it doesn't replay it. Delayed to start after the
+  // wordmark's own entrance tween above finishes settling rather than
+  // clashing with it.
+  const landingPath = router.currentRoute.value.path
+  if (landingPath === '/' || landingPath === '/notes' || landingPath.startsWith('/notes/')) {
     gsap.delayedCall(0.9, () => flyRocket())
   }
 })
